@@ -9,7 +9,7 @@ try {
     (globalThis as any).WebSocket = ws.default || ws.WebSocket || ws;
   }
 } catch {
-  // ละเว้นหากเป็น Node รุ่นใหม่ที่มี Native WebSocket
+  // หากไม่มีแพ็กเกจ ws และเป็น Node รุ่นใหม่ จะใช้ Native WebSocket ในตัวทันที
 }
 
 dotenv.config();

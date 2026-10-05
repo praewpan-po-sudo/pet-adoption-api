@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { supabase, supabaseAdmin } from '../supabaseClient';
+import { supabase, supabaseAdmin, createScopedClient } from '../supabaseClient';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 export interface AuthRequest extends Request {
   user?: {
@@ -9,6 +10,8 @@ export interface AuthRequest extends Request {
     firstName?: string;
     lastName?: string;
   };
+  token?: string;
+  supabaseUser?: SupabaseClient; // Client ภายใต้สิทธิ์ RLS ของ User คนนั้น
 }
 
 export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -32,13 +35,15 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
       });
     }
 
-    // Retrieve profile role
+    // ดึง Role จากโปรไฟล์
     const { data: profile } = await supabaseAdmin
       .from('profiles')
       .select('*')
       .eq('id', user.id)
       .single();
 
+    req.token = token;
+    req.supabaseUser = createScopedClient(token); // สิทธิ์ scoped สำหรับ User
     req.user = {
       id: user.id,
       email: user.email || '',
