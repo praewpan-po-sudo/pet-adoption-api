@@ -21,7 +21,7 @@ ON CONFLICT (name) DO NOTHING;
 
 -- 2. Insert Sample Pets
 INSERT INTO public.pets (
-    id, name, category_id, breed, age_months, gender, size, status,
+    id, name, category_id, shelter_id, breed, age_months, gender, size, status,
     description, medical_history, vaccinated, spayed_neutered, image_url
 )
 VALUES
@@ -29,6 +29,7 @@ VALUES
         'b1111111-1111-1111-1111-111111111111',
         'Milo',
         'c1111111-1111-1111-1111-111111111111',
+        's1111111-1111-1111-1111-111111111111',
         'Golden Retriever Mix',
         14,
         'MALE',
@@ -44,6 +45,7 @@ VALUES
         'b2222222-2222-2222-2222-222222222222',
         'Luna',
         'c2222222-2222-2222-2222-222222222222',
+        's1111111-1111-1111-1111-111111111111',
         'British Shorthair',
         8,
         'FEMALE',
@@ -59,6 +61,7 @@ VALUES
         'b3333333-3333-3333-3333-333333333333',
         'Coco',
         'c3333333-3333-3333-3333-333333333333',
+        's2222222-2222-2222-2222-222222222222',
         'Holland Lop',
         6,
         'FEMALE',
@@ -74,6 +77,7 @@ VALUES
         'b4444444-4444-4444-4444-444444444444',
         'Rocky',
         'c1111111-1111-1111-1111-111111111111',
+        's2222222-2222-2222-2222-222222222222',
         'Siberian Husky',
         24,
         'MALE',
@@ -89,6 +93,7 @@ VALUES
         'b5555555-5555-5555-5555-555555555555',
         'Bella',
         'c2222222-2222-2222-2222-222222222222',
+        's1111111-1111-1111-1111-111111111111',
         'Persian Cat',
         18,
         'FEMALE',

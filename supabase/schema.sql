@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS public.pets (
     vaccinated BOOLEAN NOT NULL DEFAULT false,
     spayed_neutered BOOLEAN NOT NULL DEFAULT false,
     image_url TEXT,
+    shelter_id UUID REFERENCES public.shelters(id) ON DELETE SET NULL,
     shelter_staff_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
