@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
 
-// รองรับ WebSocket อัตโนมัติ (Node 22+ มีในตัว, Node 20 ดึงจาก ws ถ้ามี)
+// รองรับ WebSocket อัตโนมัติ (Node 22+ มี Native WebSocket, Node 20 โหลด ws ปลอดภัย)
 try {
   if (typeof globalThis.WebSocket === 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-var-requires

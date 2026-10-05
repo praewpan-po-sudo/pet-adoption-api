@@ -1,0 +1,182 @@
+# Pet Adoption API - Test Suite (VS Code REST Client)
+# สไตล์การทดสอบแบบเดียวกับ cybersec-69 / 69-s1-cybersec
+
+## 1.Admin
+
+### 1.1 Admin Login
+// ล็อกอินด้วยบัญชีแอดมิน เพื่อรับ ADMIN_TOKEN สำหรับจัดการระบบ
+POST http://localhost:9091/admin/login
+Content-Type: application/json
+
+{
+    "email": "{{$dotenv ADMIN_EMAIL}}",
+    "password": "{{$dotenv ADMIN_PASSWORD}}"
+}
+
+### 1.2 Admin Profile
+// เอา token จาก response ของข้อ 1.1 ไปใส่ใน .env ตัวแปร ADMIN_TOKEN
+GET http://localhost:9091/admin/users/me
+Authorization: Bearer {{$dotenv ADMIN_TOKEN}}
+
+---
+
+## 2.User (Adopter / Staff)
+
+### 2.1 User Signup (สมัครสมาชิกผู้ขอรับเลี้ยง)
+POST http://localhost:9091/api/auth/register
+Content-Type: application/json
+
+{
+    "email": "{{$dotenv USER_EMAIL}}",
+    "password": "{{$dotenv USER_PASSWORD}}",
+    "firstName": "{{$dotenv USER_FIRSTNAME}}",
+    "lastName": "{{$dotenv USER_LASTNAME}}",
+    "phone": "{{$dotenv USER_PHONE}}",
+    "role": "ADOPTER"
+}
+
+### 2.2 User Login (เข้าสู่ระบบ)
+POST http://localhost:9091/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "{{$dotenv USER_EMAIL}}",
+    "password": "{{$dotenv USER_PASSWORD}}"
+}
+
+### 2.3 User Forgot Password (ขอรีเซ็ตรหัสผ่านผ่าน Supabase Auth)
+POST http://localhost:9091/api/auth/forgot-password
+Content-Type: application/json
+
+{
+    "email": "{{$dotenv USER_EMAIL}}"
+}
+
+### 2.4 User Profile (ดูข้อมูลโปรไฟล์ส่วนตัว)
+// เอา token จาก response ของข้อ 2.2 ไปใส่ใน .env ตัวแปร USER_TOKEN
+GET http://localhost:9091/api/users/me
+Authorization: Bearer {{$dotenv USER_TOKEN}}
+
+---
+
+## 3.Content (Pet Adoption Operations)
+
+### 3.1 Categories (หมวดหมู่ / ชนิดสัตว์)
+
+#### 3.1.1 Get all Categories (ดูหมวดหมู่สัตว์ทั้งหมด)
+GET http://localhost:9091/api/categories
+
+#### 3.1.2 Create Category (สร้างหมวดหมู่สัตว์ใหม่ - Admin เท่านั้น)
+POST http://localhost:9091/api/categories
+Content-Type: application/json
+Authorization: Bearer {{$dotenv ADMIN_TOKEN}}
+
+{
+    "name": "Hamster",
+    "description": "Small and cute pocket pets",
+    "icon_url": "https://images.unsplash.com/photo-1548767797-d8c844163c4c"
+}
+
+#### 3.1.3 Get Category by ID
+GET http://localhost:9091/api/categories/{{$dotenv CATEGORY_ID}}
+
+#### 3.1.4 Update Category (แก้ไขหมวดหมู่ - Admin เท่านั้น)
+PUT http://localhost:9091/api/categories/{{$dotenv CATEGORY_ID}}
+Content-Type: application/json
+Authorization: Bearer {{$dotenv ADMIN_TOKEN}}
+
+{
+    "name": "Hamster & Small Rodents",
+    "description": "Small pocket pets including dwarf hamsters and gerbils"
+}
+
+#### 3.1.5 Delete Category (ลบหมวดหมู่ - Admin เท่านั้น)
+DELETE http://localhost:9091/api/categories/{{$dotenv CATEGORY_ID}}
+Authorization: Bearer {{$dotenv ADMIN_TOKEN}}
+
+---
+
+### 3.2 Pets (จัดการข้อมูลสัตว์เลี้ยง)
+
+#### 3.2.1 Get all Pets (ดูรายการสัตว์ทั้งหมด พร้อม Filter)
+GET http://localhost:9091/api/pets?status=AVAILABLE
+
+#### 3.2.2 Create Pet (ลงทะเบียนสัตว์หาบ้านใหม่ - Staff / Admin)
+POST http://localhost:9091/api/pets
+Content-Type: application/json
+Authorization: Bearer {{$dotenv ADMIN_TOKEN}}
+
+{
+    "name": "Charlie",
+    "category_id": "{{$dotenv CATEGORY_ID}}",
+    "breed": "Corgi",
+    "age_months": 10,
+    "gender": "MALE",
+    "size": "MEDIUM",
+    "status": "AVAILABLE",
+    "description": "Cheerful and energetic dog with short legs and a huge heart.",
+    "medical_history": "Vaccinated, dewormed, healthy.",
+    "vaccinated": true,
+    "spayed_neutered": true,
+    "image_url": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e"
+}
+
+#### 3.2.3 Get Pet by ID (ดูรายละเอียดสัตว์เลี้ยงและคำถามที่ถามเข้ามา)
+GET http://localhost:9091/api/pets/{{$dotenv PET_ID}}
+
+#### 3.2.4 Update Pet (แก้ไขข้อมูลสัตว์เลี้ยง - Staff / Admin)
+PUT http://localhost:9091/api/pets/{{$dotenv PET_ID}}
+Content-Type: application/json
+Authorization: Bearer {{$dotenv ADMIN_TOKEN}}
+
+{
+    "description": "Cheerful and energetic dog with short legs. Updated medical check complete.",
+    "status": "AVAILABLE"
+}
+
+#### 3.2.5 Ask Question / Inquiry about Pet (ผู้สนใจสอบถามข้อมูลเพิ่มเติม)
+POST http://localhost:9091/api/pets/{{$dotenv PET_ID}}/inquiries
+Content-Type: application/json
+Authorization: Bearer {{$dotenv USER_TOKEN}}
+
+{
+    "message": "น้องเข้ากับแมวหรือเด็กเล็กได้ดีไหมครับ?"
+}
+
+#### 3.2.6 Delete Pet (ลบสัตว์เลี้ยง - Staff / Admin)
+DELETE http://localhost:9091/api/pets/{{$dotenv PET_ID}}
+Authorization: Bearer {{$dotenv ADMIN_TOKEN}}
+
+---
+
+### 3.3 Adoption Applications (ระบบคำขอรับเลี้ยงสัตว์)
+
+#### 3.3.1 Submit Application (ผู้ใช้ยื่นใบคำขอรับเลี้ยงสัตว์)
+POST http://localhost:9091/api/applications
+Content-Type: application/json
+Authorization: Bearer {{$dotenv USER_TOKEN}}
+
+{
+    "pet_id": "{{$dotenv PET_ID}}",
+    "living_condition": "Single house with a high-fenced green backyard",
+    "has_other_pets": false,
+    "reason_for_adoption": "I have experience taking care of dogs for 5 years and work from home permanently."
+}
+
+#### 3.3.2 Get Applications (ดูรายการใบสมัคร: ผู้ใช้เห็นเฉพาะของตนเอง / แอดมินเห็นทั้งหมด)
+GET http://localhost:9091/api/applications
+Authorization: Bearer {{$dotenv USER_TOKEN}}
+
+#### 3.3.3 Get Application by ID
+GET http://localhost:9091/api/applications/{{$dotenv APPLICATION_ID}}
+Authorization: Bearer {{$dotenv USER_TOKEN}}
+
+#### 3.3.4 Review Application (เจ้าหน้าที่อนุมัติหรือปฏิเสธคำขอ - Staff / Admin)
+PATCH http://localhost:9091/api/applications/{{$dotenv APPLICATION_ID}}/status
+Content-Type: application/json
+Authorization: Bearer {{$dotenv ADMIN_TOKEN}}
+
+{
+    "status": "APPROVED",
+    "review_notes": "Home inspection passed, adopter is financially ready and loving."
+}
