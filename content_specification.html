@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Pet Adoption - Content & Collection Types Specification</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  @page {
+    size: A4;
+    margin: 10mm 12mm 10mm 12mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    font-family: 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #1e293b;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Prompt', 'Sarabun', sans-serif;
+    color: #0f172a;
+    margin-top: 0;
+    font-weight: 700;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  h1 { font-size: 22px; color: #4945ff; border-bottom: 2px solid #4945ff; padding-bottom: 5px; margin-bottom: 10px; }
+  h2 { font-size: 15px; color: #0f172a; border-left: 4px solid #4945ff; padding-left: 9px; margin-top: 14px; margin-bottom: 8px; }
+  h3 { font-size: 13px; color: #32324d; margin-top: 10px; margin-bottom: 5px; }
+
+  p { margin: 0 0 6px 0; text-align: justify; }
+
+  /* Cover Page */
+  .cover-container {
+    height: 260mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 2px solid #dcdce9;
+    border-radius: 12px;
+    padding: 28px;
+    background: linear-gradient(135deg, #f6f6f9 0%, #edeef5 100%);
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .cover-header {
+    border-bottom: 3px solid #4945ff;
+    padding-bottom: 12px;
+  }
+
+  .badge-tag {
+    display: inline-block;
+    background: #4945ff;
+    color: white;
+    font-family: 'Prompt', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .cover-title {
+    font-size: 24px;
+    line-height: 1.3;
+    color: #181826;
+    margin-bottom: 6px;
+  }
+
+  .cover-subtitle {
+    font-size: 13.5px;
+    color: #4a4a68;
+    font-weight: 500;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background: white;
+    padding: 14px 18px;
+    border-radius: 8px;
+    border: 1px solid #dcdce9;
+    margin: 16px 0;
+  }
+
+  .meta-item {
+    font-size: 12px;
+  }
+  .meta-label {
+    font-weight: 600;
+    color: #666687;
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+  .meta-value {
+    color: #181826;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6px 0 10px 0;
+    font-size: 11px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 5px 7px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    background-color: #f1f5f9;
+    color: #1e293b;
+    font-family: 'Prompt', sans-serif;
+    font-weight: 600;
+    font-size: 10.5px;
+  }
+
+  tr:nth-child(even) td {
+    background-color: #f8fafc;
+  }
+
+  .card-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 9px 12px;
+    margin-bottom: 9px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .code-block {
+    background: #181826;
+    color: #f8fafc;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 9.5px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    line-height: 1.4;
+    margin: 6px 0 8px 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 600;
+    font-family: 'Prompt', sans-serif;
+  }
+  .badge-strapi { background: #eeedff; color: #4945ff; border: 1px solid #d9d8ff; }
+  .badge-green { background: #dcfce7; color: #166534; }
+  .badge-yellow { background: #fef9c3; color: #854d0e; }
+  .badge-blue { background: #e0f2fe; color: #0369a1; }
+  .badge-purple { background: #f3e8ff; color: #6b21a8; }
+
+  ul, ol {
+    margin: 0 0 6px 0;
+    padding-left: 18px;
+  }
+  li { margin-bottom: 2px; }
+
+  .diagram-container {
+    background: #1e1e2f;
+    color: #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 6px 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+  }
+
+  .footer-note {
+    border-top: 1px solid #cbd5e1;
+    padding-top: 5px;
+    font-size: 10px;
+    color: #64748b;
+    text-align: center;
+  }
+
+  .page-break {
+    page-break-after: always;
+    break-after: page;
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="cover-container">
+  <div class="cover-header">
+    <span class="badge-tag">Content Architecture & Strapi Mapping</span>
+    <h1 class="cover-title">เอกสารข้อกำหนดโครงสร้าง Content & Collection Types<br><span style="color:#4945ff;">Pet Adoption API & Strapi Content Manager</span></h1>
+    <div class="cover-subtitle">การออกแบบโครงสร้างเนื้อหา (Collection Types) และระบบบริหารจัดการหลังบ้านเทียบเคียง Strapi 5</div>
+  </div>
+
+  <div>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">ชื่อโครงการ</span>
+        <span class="meta-value">Pet Adoption API (Content Edition)</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">รูปแบบเทียบเคียง</span>
+        <span class="meta-value">Strapi 5 Content Manager (Collection Types)</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">จำนวน Collection Types</span>
+        <span class="meta-value">6 Types (Category, Shelter, Pet, Application, Comment, User)</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">เครื่องมือควบคุมหลังบ้าน</span>
+        <span class="meta-value">Web Admin (พอร์ต 9091) / Supabase Studio / Strapi</span>
+      </div>
+    </div>
+
+    <div class="card-box" style="border-left: 4px solid #4945ff;">
+      <h3 style="margin-top:0; color:#4945ff;">🎯 วัตถุประสงค์ของเอกสาร</h3>
+      <p>เอกสารฉบับนี้จัดทำขึ้นเพื่อระบุข้อกำหนดและโครงสร้างของ <strong>Content (Collection Types)</strong> สำหรับระบบ <strong>Pet Adoption</strong> โดยทำการเทียบเคียงแบบ 1:1 จากระบบเดิมของ Strapi ในโปรเจกต์ <code>cybersec-69</code> (Category, Department, Ticket, Ticket Comment, User) มาเป็นระบบรับเลี้ยงสัตว์และจัดการศูนย์พักพิง พร้อมแนวทางการนำไปใช้งานบน Web Admin Dashboard, Supabase Table Editor และ Strapi Headless CMS</p>
+    </div>
+
+    <div class="card-box" style="border-left: 4px solid #10b981;">
+      <h3 style="margin-top:0; color:#065f46;">📌 สรุปจุดเด่นของระบบ Content ใหม่</h3>
+      <ul style="margin-bottom:0;">
+        <li><strong>ความครอบคลุม 6 Collection Types</strong>: รองรับทุกมิติของการรับเลี้ยงสัตว์ ตั้งแต่ศูนย์พักพิง, หมวดสัตว์, สัตว์เลี้ยง, ใบสมัคร, จนถึงระบบถาม-ตอบ</li>
+        <li><strong>การจัดการผ่าน Web GUI แบบ Strapi</strong>: มีหน้าจอ Dark Mode พร้อมปุ่ม <code>+ Create new entry</code> และตารางข้อมูลที่พอร์ต 9091</li>
+        <li><strong>ยืดหยุ่นสูง</strong>: สามารถใช้งานผ่าน Supabase PostgreSQL Direct หรือ Strapi 5 Content-Type Builder ได้ทันที</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    จัดทำโดย: ทีมพัฒนาประจำโครงการ Pet Adoption API | เอกสารแนบแยก: โครงสร้าง Content Manager
+  </div>
+</div>
+
+<!-- PAGE 2: CONTENT -->
+<h2>1. ตารางเปรียบเทียบโครงสร้าง Content (Strapi vs Pet Adoption)</h2>
+
+<p>เมื่อวิเคราะห์จากหน้าจอ <strong>Content Manager (Strapi 5)</strong> ของโปรเจกต์เดิม จะพบว่าระบบถูกขับเคลื่อนด้วย Collection Types ทั้งหมด 5 ตัว ซึ่งเราสามารถแปลงเป็น Pet Adoption ได้ 6 ตัวที่สมบูรณ์ยิ่งขึ้นดังนี้:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 20%;">Strapi ในระบบเดิม</th>
+      <th style="width: 25%;">Pet Adoption Collection Type</th>
+      <th style="width: 35%;">ฟิลด์สำคัญ (Fields & Data Types)</th>
+      <th style="width: 20%;">ความสัมพันธ์ (Relation)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><code>Category</code></strong><br><span class="badge badge-strapi">Collection Type</span></td>
+      <td><strong><code>Category</code> (ชนิดสัตว์)</strong><br><small>สุนัข, แมว, กระต่าย, นก ฯลฯ</small></td>
+      <td>• <code>name</code> (String, Unique)<br>• <code>description</code> (Text)<br>• <code>icon_url</code> (Media / String)</td>
+      <td>One-to-Many -> <code>Pet</code></td>
+    </tr>
+    <tr>
+      <td><strong><code>Department</code></strong><br><span class="badge badge-strapi">Collection Type</span></td>
+      <td><strong><code>Shelter</code> (ศูนย์พักพิง)</strong><br><small>สาขาหรือองค์กรช่วยเหลือสัตว์</small></td>
+      <td>• <code>name</code> (String, Unique)<br>• <code>location</code> (String)<br>• <code>contact_phone</code> (String)<br>• <code>email</code> (Email)</td>
+      <td>One-to-Many -> <code>Pet</code></td>
+    </tr>
+    <tr>
+      <td><strong><code>Ticket</code></strong><br><span class="badge badge-strapi">Collection Type</span></td>
+      <td><strong><code>Pet</code> (สัตว์เลี้ยงหาบ้าน)</strong><br><small>ข้อมูลสัตว์และประวัติสุขภาพ</small></td>
+      <td>• <code>name</code> (String)<br>• <code>breed</code> (String)<br>• <code>age_months</code> (Integer)<br>• <code>gender</code> (Enum: MALE, FEMALE)<br>• <code>status</code> (AVAILABLE, PENDING, ADOPTED)<br>• <code>image_url</code> (Media / String)</td>
+      <td>Many-to-One -> <code>Category</code><br>Many-to-One -> <code>Shelter</code></td>
+    </tr>
+    <tr>
+      <td><em>(ส่วนขยายงาน)</em><br><span class="badge badge-green">Business Flow</span></td>
+      <td><strong><code>Adoption Application</code></strong><br><small>ใบสมัครขอรับเลี้ยงสัตว์</small></td>
+      <td>• <code>living_condition</code> (Text)<br>• <code>has_other_pets</code> (Boolean)<br>• <code>reason_for_adoption</code> (Text)<br>• <code>status</code> (SUBMITTED, UNDER_REVIEW, APPROVED, REJECTED)</td>
+      <td>Many-to-One -> <code>Pet</code><br>Many-to-One -> <code>User</code></td>
+    </tr>
+    <tr>
+      <td><strong><code>Ticket Comment</code></strong><br><span class="badge badge-strapi">Collection Type</span></td>
+      <td><strong><code>Pet Comment / Inquiry</code></strong><br><small>สอบถาม/คอมเมนต์สัตว์เลี้ยง</small></td>
+      <td>• <code>message</code> (Text)<br>• <code>created_at</code> (DateTime)</td>
+      <td>Many-to-One -> <code>Pet</code><br>Many-to-One -> <code>User</code></td>
+    </tr>
+    <tr>
+      <td><strong><code>User</code></strong><br><span class="badge badge-strapi">Collection Type</span></td>
+      <td><strong><code>User / Profile</code></strong><br><small>ผู้ใช้งานและเจ้าหน้าที่</small></td>
+      <td>• <code>email</code> (Email, Unique)<br>• <code>first_name</code>, <code>last_name</code> (String)<br>• <code>role</code> (ADMIN, SHELTER_STAFF, ADOPTER)<br>• <code>phone</code> (String)</td>
+      <td>One-to-Many -> <code>Application</code><br>One-to-Many -> <code>Comment</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. แผนผังความสัมพันธ์ของข้อมูล (Content Entity Relationship)</h2>
+
+<div class="diagram-container">
++------------------+         1 : N         +----------------------+
+|     Category     |---------------------->|         Pet          |
+| (Dog, Cat, etc.) |                       | (Name, Breed, Status)|
++------------------+                       +----------------------+
+                                                      | 1
++------------------+         1 : N                    |
+|     Shelter      |----------------------------------+ :
+| (Rescue Center)  |                                  | N
++------------------+                                  v
+                                           +----------------------+
++------------------+         1 : N         | Adoption Application |
+|   User/Profile   |---------------------->| (Review & Approval)  |
+| (Adopter, Staff) |                       +----------------------+
++------------------+                                  ^
+         | 1                                          |
+         | : N                                        |
+         v                                            |
++----------------------+                              |
+| Pet Comment/Inquiry  |------------------------------+
+| (Questions on Pet)   |
++----------------------+
+</div>
+
+<div class="page-break"></div>
+
+<!-- PAGE 3: ADMIN UI & IMPLEMENTATION -->
+<h2>3. รูปแบบการใช้งาน Admin Content Manager (3 ทางเลือก)</h2>
+
+<div class="card-box" style="border-left: 4px solid #4945ff;">
+  <h3 style="margin-top:0; color:#4945ff;">แนวทางที่ 1: Built-in Dark Mode Content Manager (พอร์ต 9091)</h3>
+  <p>สร้างขึ้นโดยถอดแบบหน้าตา Strapi 5 Content Manager (ตามภาพที่ผู้ใช้ส่งมา) ครบถ้วนทั้งโทนสี Dark Theme, แถบไอคอนซ้ายสุด, รายการ Collection Types, แถบค้นหา, ฟิลเตอร์, ป้ายสถานะสี, และปุ่ม <strong>"+ Create new entry"</strong></p>
+  <ul>
+    <li><strong>URL เข้าใช้งาน</strong>: <code>http://localhost:9091/admin</code></li>
+    <li><strong>ไฟล์ต้นทาง</strong>: <code>public/admin/index.html</code> รันผ่าน Express Server ทันทีเมื่อเปิดคำสั่ง <code>npm run dev</code></li>
+    <li><strong>ฟังก์ชันที่รองรับ</strong>: สลับดู Collection Types ทั้ง 6 ชนิด, ฟอร์ม Modal เพิ่มข้อมูลใหม่, ค้นหาแบบ Real-time, และลบข้อมูล</li>
+  </ul>
+</div>
+
+<div class="card-box" style="border-left: 4px solid #10b981;">
+  <h3 style="margin-top:0; color:#065f46;">แนวทางที่ 2: Supabase Studio Table Editor (บนคลาวด์)</h3>
+  <p>สำหรับทีมที่ต้องการเชื่อมต่อกับฐานข้อมูล Supabase PostgreSQL โดยตรง Supabase มีระบบ Table Editor ที่มีคุณสมบัติเช่นเดียวกับ Strapi Content Manager:</p>
+  <ul>
+    <li>เข้าถึงได้ที่: <strong>Supabase Dashboard -> Table Editor</strong></li>
+    <li>แสดงตาราง <code>categories</code>, <code>shelters</code>, <code>pets</code>, <code>adoption_applications</code>, <code>pet_inquiries</code>, <code>profiles</code></li>
+    <li>มีปุ่ม <strong>Insert Row</strong>, รองรับการอัปโหลดไฟล์ภาพเข้า Storage Bucket, และระบบค้นหากรองข้อมูลแบบ Multi-column</li>
+  </ul>
+</div>
+
+<div class="card-box" style="border-left: 4px solid #0284c7;">
+  <h3 style="margin-top:0; color:#0369a1;">แนวทางที่ 3: ติดตั้งบน Strapi 5 Headless CMS โดยตรง (พอร์ต 1337)</h3>
+  <p>หากต้องการรัน Strapi 5 ต่อไปตามหน้าจอเดิม สามารถสร้าง Collection Types ด้วย 4 ขั้นตอน:</p>
+  <ol>
+    <li>เปิดหน้า Strapi <code>http://localhost:1337/admin</code> -> เข้าเมนู <strong>Content-Type Builder</strong></li>
+    <li>คลิก <strong>"+ Create new collection type"</strong> ตั้งชื่อ Display Name: <code>Category</code>, <code>Shelter</code>, <code>Pet</code>, <code>Adoption Application</code>, <code>Pet Comment</code></li>
+    <li>เพิ่ม Fields ตามตารางในข้อ 1 แล้วคลิก <strong>Save</strong></li>
+    <li>ระบบ Strapi จะคอมไพล์และสร้างหน้าจอ <strong>Content Manager</strong> ให้ใช้งานตามภาพของท่านทันที</li>
+  </ol>
+</div>
+
+<h2>4. สรุปคำแนะนำในการแบ่งงานทีม 3 คนสำหรับ Content Module</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>สมาชิก</th>
+      <th>หน้าที่ต่อ Content</th>
+      <th>ผลงานที่ต้องส่งมอบในส่วน Content</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>คนที่ 1 (DB Lead)</strong></td>
+      <td>สร้างตารางและ Seed ข้อมูล Content</td>
+      <td>สคริปต์ <code>schema.sql</code> และ <code>seed.sql</code> ครอบคลุมทั้ง 6 Entities พร้อมข้อมูลตัวอย่างสัตว์เลี้ยง 5 ตัว</td>
+    </tr>
+    <tr>
+      <td><strong>คนที่ 2 (Auth Lead)</strong></td>
+      <td>ควบคุมสิทธิ์เข้าถึง Content</td>
+      <td>กำหนด RLS Policies ว่าใครมีสิทธิ์เพิ่ม ลบ หรือแก้ไขสัตว์และใบสมัคร (Admin/Staff vs Adopter)</td>
+    </tr>
+    <tr>
+      <td><strong>คนที่ 3 (API Lead)</strong></td>
+      <td>เชื่อมต่อ Content กับ REST API</td>
+      <td>ทดสอบยิง CRUD Endpoints สำหรับทั้ง 6 Content Types ผ่านไฟล์ <code>api.http.simple</code> ให้สมบูรณ์</td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

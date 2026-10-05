@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Pet Adoption API - Project Specification</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  @page {
+    size: A4;
+    margin: 10mm 13mm 10mm 13mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    font-family: 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: #1e293b;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Prompt', 'Sarabun', sans-serif;
+    color: #0f172a;
+    margin-top: 0;
+    font-weight: 700;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  h1 { font-size: 22px; color: #0284c7; border-bottom: 2px solid #0284c7; padding-bottom: 5px; margin-bottom: 10px; }
+  h2 { font-size: 15.5px; color: #0f172a; border-left: 4px solid #0284c7; padding-left: 9px; margin-top: 14px; margin-bottom: 8px; }
+  h3 { font-size: 13.5px; color: #0369a1; margin-top: 10px; margin-bottom: 5px; }
+
+  p { margin: 0 0 7px 0; text-align: justify; }
+
+  /* Cover Page */
+  .cover-container {
+    height: 260mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 2px solid #bae6fd;
+    border-radius: 12px;
+    padding: 30px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .cover-header {
+    border-bottom: 3px solid #0284c7;
+    padding-bottom: 12px;
+  }
+
+  .badge-tag {
+    display: inline-block;
+    background: #0284c7;
+    color: white;
+    font-family: 'Prompt', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .cover-title {
+    font-size: 25px;
+    line-height: 1.3;
+    color: #0f172a;
+    margin-bottom: 6px;
+  }
+
+  .cover-subtitle {
+    font-size: 14px;
+    color: #475569;
+    font-weight: 500;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background: white;
+    padding: 14px 18px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    margin: 16px 0;
+  }
+
+  .meta-item {
+    font-size: 12px;
+  }
+  .meta-label {
+    font-weight: 600;
+    color: #64748b;
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+  .meta-value {
+    color: #0f172a;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6px 0 10px 0;
+    font-size: 11.5px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    background-color: #f1f5f9;
+    color: #1e293b;
+    font-family: 'Prompt', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+  }
+
+  tr:nth-child(even) td {
+    background-color: #f8fafc;
+  }
+
+  .card-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .code-block {
+    background: #0f172a;
+    color: #f8fafc;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 10px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    line-height: 1.4;
+    margin: 6px 0 8px 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 9.5px;
+    font-weight: 600;
+    font-family: 'Prompt', sans-serif;
+  }
+  .badge-blue { background: #e0f2fe; color: #0369a1; }
+  .badge-green { background: #dcfce7; color: #166534; }
+  .badge-purple { background: #f3e8ff; color: #6b21a8; }
+
+  ul, ol {
+    margin: 0 0 6px 0;
+    padding-left: 18px;
+  }
+  li { margin-bottom: 2px; }
+
+  .diagram-container {
+    background: #f8fafc;
+    border: 1px dashed #94a3b8;
+    border-radius: 8px;
+    padding: 6px 10px;
+    text-align: center;
+    margin: 6px 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .footer-note {
+    border-top: 1px solid #cbd5e1;
+    padding-top: 5px;
+    font-size: 10px;
+    color: #64748b;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="cover-container">
+  <div class="cover-header">
+    <span class="badge-tag">Project Specification & Work Plan</span>
+    <h1 class="cover-title">ระบบรับเลี้ยงสัตว์และจัดการศูนย์พักพิงสัตว์<br><span style="color:#0284c7;">Pet Adoption API (Supabase Backend)</span></h1>
+    <div class="cover-subtitle">เอกสารการแบ่งงาน 3 คนและมาตรฐานการทดสอบระบบ (อ้างอิงรูปแบบโปรเจกต์ cybersec-69)</div>
+  </div>
+
+  <div>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">ชื่อโครงการ</span>
+        <span class="meta-value">Pet Adoption API</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">เทคโนโลยีหลัก</span>
+        <span class="meta-value">Supabase (PostgreSQL, Auth, RLS, Storage)</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">จำนวนสมาชิกทีม</span>
+        <span class="meta-value">3 คน (DB Lead, Auth/Storage Lead, API/Testing Lead)</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">เครื่องมือทดสอบ</span>
+        <span class="meta-value">api.http.simple (VS Code REST Client)</span>
+      </div>
+    </div>
+
+    <div class="card-box" style="border-left: 4px solid #10b981;">
+      <h3 style="margin-top:0; color:#065f46;">🎯 ภาพรวมและวัตถุประสงค์</h3>
+      <p>โครงการนี้มีจุดมุ่งหมายในการพัฒนา Backend API สำหรับระบบ <strong>Pet Adoption (รับเลี้ยงสัตว์)</strong> เพื่อเชื่อมต่อระหว่างศูนย์พักพิงสัตว์ (Shelters) กับผู้ที่ต้องการรับเลี้ยงสัตว์ (Adopters) โดยใช้บริการคลาวด์และฐานข้อมูลสมัยใหม่ของ <strong>Supabase</strong> ครอบคลุมการยืนยันตัวตน, จัดการรูปถ่ายสัตว์เลี้ยง, การยื่นคำขอรับเลี้ยง และการคัดกรองคุณสมบัติ พร้อมกำหนดการแบ่งงานในทีม 3 คนอย่างเป็นระบบ</p>
+    </div>
+
+    <div class="card-box" style="border-left: 4px solid #0284c7;">
+      <h3 style="margin-top:0; color:#0369a1;">📌 ผลสัมฤทธิ์ที่ส่งมอบ (Key Deliverables)</h3>
+      <ul style="margin-bottom:0;">
+        <li>ฐานข้อมูล Supabase PostgreSQL ประกอบด้วย 5 ตารางหลัก พร้อม Trigger อัตโนมัติและ RLS Security Policies</li>
+        <li>ระบบ Supabase Authentication รองรับ 3 บทบาท (ADMIN, SHELTER_STAFF, ADOPTER)</li>
+        <li>Storage Bucket (<code>pet-images</code>) สำหรับจัดเก็บภาพถ่ายสัตว์เลี้ยงแบบ CDN เข้าถึงได้สาธารณะ</li>
+        <li>ชุดทดสอบครบวงจรผ่านไฟล์ <code>api.http.simple</code> ในรูปแบบมาตรฐานเดียวกับ cybersec-69</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    จัดทำโดย: ทีมพัฒนาประจำโครงการ Pet Adoption API | รูปแบบการบริหารจัดการ: มาตรฐาน cybersec-69
+  </div>
+</div>
+
+<!-- PAGE 2: CONTENT -->
+<h2>1. การแบ่งหน้าที่ในทีม 3 คน (Team Roles & Responsibilities)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 18%;">สมาชิก</th>
+      <th style="width: 25%;">บทบาท / ตำแหน่ง</th>
+      <th style="width: 20%;">Branch ที่รับผิดชอบ</th>
+      <th style="width: 37%;">ชิ้นงานหลักที่ส่งมอบ (Deliverables)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>คนที่ 1</strong></td>
+      <td><strong>Database & Supabase Lead</strong><br>(ดูแลโครงสร้างข้อมูลและสคริปต์)</td>
+      <td><span class="badge badge-blue">feat/supabase-db</span></td>
+      <td>
+        • ออกแบบ ERD และความสัมพันธ์ข้อมูล<br>
+        • ไฟล์ <code>supabase/schema.sql</code> (Tables, Enums, Triggers, RLS)<br>
+        • ไฟล์ <code>supabase/seed.sql</code> และ <code>seed.ts</code> (ข้อมูลจำลองสัตว์เลี้ยงและหมวดหมู่)<br>
+        • ไฟล์คอนฟิกสิ่งแวดล้อม <code>.env.simple</code> และ <code>.env.example</code>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>คนที่ 2</strong></td>
+      <td><strong>Auth, Security & Storage Lead</strong><br>(ดูแลระบบล็อกอินและความปลอดภัย)</td>
+      <td><span class="badge badge-purple">feat/supabase-auth-storage</span></td>
+      <td>
+        • เชื่อมต่อ Supabase Auth Client (SDK / GoTrue)<br>
+        • เขียน Middleware ถอดรหัส JWT และ Role Guard (`ADMIN`, `STAFF`, `ADOPTER`)<br>
+        • สร้าง Auth Endpoints (`/admin/login`, `/api/auth/...`, `/api/users/me`)<br>
+        • ตั้งค่า Supabase Storage Bucket (`pet-images`) และ RLS Policy อัปโหลดรูปภาพ
+      </td>
+    </tr>
+    <tr>
+      <td><strong>คนที่ 3</strong></td>
+      <td><strong>REST API & Testing Lead</strong><br>(ดูแล CRUD & ไฟล์ทดสอบ)</td>
+      <td><span class="badge badge-green">feat/api-testing</span></td>
+      <td>
+        • CRUD Endpoints สำหรับ Categories, Pets, และ Adoption Applications<br>
+        • Business Logic (ตรวจสอบสถานะสัตว์ และอัปเดตสถานะเมื่อคำขอได้รับการอนุมัติ)<br>
+        • <strong>ไฟล์ทดสอบ <code>api.http.simple</code></strong> ครบทั้ง Admin, User, Content<br>
+        • ตรวจสอบผลลัพธ์การยิง API และเขียนคู่มือการทดสอบ
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="card-box">
+  <h3 style="margin-top:0;">ลำดับขั้นตอนการส่งต่องาน (Handover Timeline)</h3>
+  <ol style="margin-bottom:0;">
+    <li><strong>ระยะที่ 1 (คนที่ 1 เริ่มต้น)</strong>: แตก Branch <code>feat/supabase-db</code> → เขียน SQL Schema และ Seed Data บน Supabase → ทดสอบ Schema ผ่าน Supabase Table Editor → Merge เข้าสู่ <code>main</code></li>
+    <li><strong>ระยะที่ 2 (คนที่ 2 รับไม้ต่อ)</strong>: ดึงโค้ดล่าสุดจาก <code>main</code> → แตก Branch <code>feat/supabase-auth-storage</code> → พัฒนาระบบ Authentication, Token Verification และระบบ Storage รูปภาพ → Merge เข้าสู่ <code>main</code></li>
+    <li><strong>ระยะที่ 3 (คนที่ 3 ดำเนินการสมบูรณ์)</strong>: ดึงโค้ดล่าสุดจาก <code>main</code> → แตก Branch <code>feat/api-testing</code> → จัดทำ Routes จัดการข้อมูลสัตว์เลี้ยงและคำขอรับเลี้ยง → <strong>จัดทำไฟล์ <code>api.http.simple</code></strong> ทดสอบยิง Request ครบทุก Flow → ตรวจสอบความถูกต้องและ Merge เข้าสู่ <code>main</code></li>
+  </ol>
+</div>
+
+<h2>2. โครงสร้างฐานข้อมูล (Database Schema)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>ตาราง (Entity)</th>
+      <th>คอลัมน์สำคัญ</th>
+      <th>Constraints & ความสัมพันธ์</th>
+      <th>คำอธิบายหน้าที่</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><code>profiles</code></strong></td>
+      <td><code>id</code>, <code>email</code>, <code>first_name</code>, <code>last_name</code>, <code>role</code>, <code>phone</code></td>
+      <td>PK -> <code>auth.users(id)</code><br>Role: <code>ADMIN</code>, <code>SHELTER_STAFF</code>, <code>ADOPTER</code></td>
+      <td>ข้อมูลโปรไฟล์ผู้ใช้งาน ขยายจากตารางยืนยันตัวตนของ Supabase</td>
+    </tr>
+    <tr>
+      <td><strong><code>categories</code></strong></td>
+      <td><code>id</code>, <code>name</code>, <code>description</code>, <code>icon_url</code></td>
+      <td>PK UUID, Name Unique</td>
+      <td>ชนิดของสัตว์ เช่น Dog, Cat, Rabbit, Bird</td>
+    </tr>
+    <tr>
+      <td><strong><code>pets</code></strong></td>
+      <td><code>id</code>, <code>name</code>, <code>category_id</code>, <code>breed</code>, <code>age_months</code>, <code>gender</code>, <code>size</code>, <code>status</code>, <code>image_url</code></td>
+      <td>FK -> categories(id)<br>Status: <code>AVAILABLE</code>, <code>PENDING</code>, <code>ADOPTED</code></td>
+      <td>รายการสัตว์เลี้ยงในศูนย์พักพิง มีข้อมูลสุขภาพและความพร้อมในการรับเลี้ยง</td>
+    </tr>
+    <tr>
+      <td><strong><code>adoption_applications</code></strong></td>
+      <td><code>id</code>, <code>pet_id</code>, <code>applicant_id</code>, <code>status</code>, <code>living_condition</code>, <code>reason_for_adoption</code></td>
+      <td>FK -> pets(id)<br>FK -> profiles(id)<br>Status: <code>SUBMITTED</code>, <code>UNDER_REVIEW</code>, <code>APPROVED</code>, <code>REJECTED</code></td>
+      <td>ใบสมัครขอรับเลี้ยงสัตว์ บันทึกสภาพแวดล้อมที่อยู่อาศัยและการพิจารณา</td>
+    </tr>
+    <tr>
+      <td><strong><code>pet_inquiries</code></strong></td>
+      <td><code>id</code>, <code>pet_id</code>, <code>user_id</code>, <code>message</code></td>
+      <td>FK -> pets(id)<br>FK -> profiles(id)</td>
+      <td>คำถาม/ข้อความสอบถามเกี่ยวกับสัตว์เลี้ยงตัวนั้นๆ</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. แผนผังการทดสอบ API ด้วย <code>api.http.simple</code></h2>
+
+<div class="code-block"># โครงสร้างชุดทดสอบแบ่งเป็น 3 หมวดหมู่หลัก (ตามสไตล์ cybersec-69)
+1. Admin
+   ├── 1.1 Admin Login (POST /admin/login)
+   └── 1.2 Admin Profile (GET /admin/users/me)
+
+2. User (Adopter / Staff)
+   ├── 2.1 User Register (POST /api/auth/register)
+   ├── 2.2 User Login (POST /api/auth/login)
+   ├── 2.3 User Forgot Password (POST /api/auth/forgot-password)
+   └── 2.4 User Profile (GET /api/users/me)
+
+3. Content
+   ├── 3.1 Categories (GET all, POST create, PUT update, DELETE)
+   ├── 3.2 Pets (GET all with filters, POST create, PUT update, DELETE, POST inquiries)
+   └── 3.3 Adoption Applications (POST submit, GET my/all, PATCH review status)</div>
+
+</body>
+</html>

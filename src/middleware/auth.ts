@@ -1,0 +1,71 @@
+import { Request, Response, NextFunction } from 'express';
+import { supabase, supabaseAdmin } from '../supabaseClient';
+
+export interface AuthRequest extends Request {
+  user?: {
+    id: string;
+    email: string;
+    role: string;
+    firstName?: string;
+    lastName?: string;
+  };
+}
+
+export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'Bearer token is required in Authorization header',
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+
+    if (error || !user) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: error?.message || 'Invalid or expired token',
+      });
+    }
+
+    // Retrieve profile role
+    const { data: profile } = await supabaseAdmin
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+
+    req.user = {
+      id: user.id,
+      email: user.email || '',
+      role: profile?.role || user.user_metadata?.role || 'ADOPTER',
+      firstName: profile?.first_name || user.user_metadata?.first_name || '',
+      lastName: profile?.last_name || user.user_metadata?.last_name || '',
+    };
+
+    next();
+  } catch (err: any) {
+    return res.status(500).json({ error: 'Internal Server Error', message: err.message });
+  }
+};
+
+export const requireRole = (allowedRoles: string[]) => {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Unauthorized', message: 'Authentication required' });
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: `Access denied. Requires one of roles: ${allowedRoles.join(', ')}. Current role: ${req.user.role}`,
+      });
+    }
+
+    next();
+  };
+};

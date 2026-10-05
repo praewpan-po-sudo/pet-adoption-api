@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Supabase Studio Dashboard vs Strapi - Content Management Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  @page {
+    size: A4;
+    margin: 10mm 12mm 10mm 12mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    font-family: 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #1e293b;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Prompt', 'Sarabun', sans-serif;
+    color: #0f172a;
+    margin-top: 0;
+    font-weight: 700;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  h1 { font-size: 22px; color: #10b981; border-bottom: 2px solid #10b981; padding-bottom: 5px; margin-bottom: 10px; }
+  h2 { font-size: 15px; color: #0f172a; border-left: 4px solid #10b981; padding-left: 9px; margin-top: 14px; margin-bottom: 8px; }
+  h3 { font-size: 13px; color: #047857; margin-top: 10px; margin-bottom: 5px; }
+
+  p { margin: 0 0 6px 0; text-align: justify; }
+
+  /* Cover Page */
+  .cover-container {
+    height: 260mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 2px solid #d1fae5;
+    border-radius: 12px;
+    padding: 28px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .cover-header {
+    border-bottom: 3px solid #10b981;
+    padding-bottom: 12px;
+  }
+
+  .badge-tag {
+    display: inline-block;
+    background: #10b981;
+    color: white;
+    font-family: 'Prompt', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .cover-title {
+    font-size: 24px;
+    line-height: 1.3;
+    color: #064e3b;
+    margin-bottom: 6px;
+  }
+
+  .cover-subtitle {
+    font-size: 13.5px;
+    color: #065f46;
+    font-weight: 500;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background: white;
+    padding: 14px 18px;
+    border-radius: 8px;
+    border: 1px solid #d1fae5;
+    margin: 16px 0;
+  }
+
+  .meta-item {
+    font-size: 12px;
+  }
+  .meta-label {
+    font-weight: 600;
+    color: #6b7280;
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+  .meta-value {
+    color: #064e3b;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6px 0 10px 0;
+    font-size: 11px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    background-color: #f1f5f9;
+    color: #1e293b;
+    font-family: 'Prompt', sans-serif;
+    font-weight: 600;
+    font-size: 10.5px;
+  }
+
+  tr:nth-child(even) td {
+    background-color: #f8fafc;
+  }
+
+  .card-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .code-block {
+    background: #1c1c1c;
+    color: #3ecf8e;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 9.5px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    line-height: 1.4;
+    margin: 6px 0 8px 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 600;
+    font-family: 'Prompt', sans-serif;
+  }
+  .badge-supabase { background: #d1fae5; color: #047857; border: 1px solid #a7f3d0; }
+  .badge-strapi { background: #eeedff; color: #4945ff; border: 1px solid #d9d8ff; }
+  .badge-blue { background: #e0f2fe; color: #0369a1; }
+
+  ul, ol {
+    margin: 0 0 6px 0;
+    padding-left: 18px;
+  }
+  li { margin-bottom: 2px; }
+
+  .diagram-container {
+    background: #171717;
+    color: #e5e5e5;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 6px 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    line-height: 1.4;
+  }
+
+  .footer-note {
+    border-top: 1px solid #cbd5e1;
+    padding-top: 5px;
+    font-size: 10px;
+    color: #64748b;
+    text-align: center;
+  }
+
+  .page-break {
+    page-break-after: always;
+    break-after: page;
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="cover-container">
+  <div class="cover-header">
+    <span class="badge-tag">Supabase Studio vs Strapi Dashboard</span>
+    <h1 class="cover-title">คู่มือระบบ Dashboard ของ Supabase<br><span style="color:#10b981;">(Supabase Studio & Table Editor)</span></h1>
+    <div class="cover-subtitle">การใช้งาน Dashboard จัดการ Content แบบเดียวกับ Strapi Content Manager ในระบบ Pet Adoption</div>
+  </div>
+
+  <div>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">ชื่อระบบ Dashboard</span>
+        <span class="meta-value">Supabase Studio (Table Editor)</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">ระบบที่เปรียบเทียบ</span>
+        <span class="meta-value">Strapi 5 (Content Manager)</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">ช่องทางเข้าใช้งาน</span>
+        <span class="meta-value">Supabase Cloud / Local Studio (Port 54323)</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">หน้าที่หลัก</span>
+        <span class="meta-value">จัดการตาราง, Insert Row, จัดการรูปภาพ & User</span>
+      </div>
+    </div>
+
+    <div class="card-box" style="border-left: 4px solid #10b981;">
+      <h3 style="margin-top:0; color:#047857;">🎯 คำตอบสำคัญ: Supabase มี Dashboard เหมือน Strapi หรือไม่?</h3>
+      <p><strong>มีแน่นอน 100%!</strong> Supabase มีระบบควบคุมบริหารหลังบ้านในตัวที่ชื่อว่า <strong>"Supabase Studio"</strong> ซึ่งมีฟังก์ชันครบถ้วนและทันสมัยไม่แพ้ Strapi โดยเฉพาะเมนู <strong>"Table Editor"</strong> ที่ทำหน้าที่เป็น <strong>Content Manager</strong> แสดงรายการตารางทั้งหมด มีปุ่ม <code>Insert Row</code> (เหมือน <code>+ Create new entry</code>), ระบบค้นหา, กรองข้อมูล, อัปโหลดรูปภาพเข้า Storage และดูความสัมพันธ์ระหว่างตารางได้สดๆ แบบ Real-time</p>
+    </div>
+
+    <div class="card-box" style="border-left: 4px solid #4945ff;">
+      <h3 style="margin-top:0; color:#4945ff;">📌 เมนูใน Supabase Studio ที่เทียบเท่า Strapi</h3>
+      <ul style="margin-bottom:0;">
+        <li><strong>Table Editor</strong> = Strapi <strong>Content Manager</strong> (เพิ่ม/ลบ/แก้ไขข้อมูลสัตว์เลี้ยง, หมวดหมู่, ใบสมัคร)</li>
+        <li><strong>Storage</strong> = Strapi <strong>Media Library</strong> (อัปโหลดและจัดการรูปภาพสัตว์เลี้ยง)</li>
+        <li><strong>Authentication</strong> = Strapi <strong>Users & Permissions</strong> (จัดการผู้ใช้และกำหนดสิทธิ์)</li>
+        <li><strong>SQL Editor</strong> = ตัวจัดการฐานข้อมูลระดับสูง (รัน Script SQL & Migrations)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    จัดทำโดย: ทีมพัฒนาประจำโครงการ Pet Adoption API | เอกสารคู่มือ Dashboard ฉบับแยก
+  </div>
+</div>
+
+<!-- PAGE 2: COMPARISON & FEATURES -->
+<h2>1. ตารางเปรียบเทียบเมนู Dashboard ระหว่าง Supabase กับ Strapi</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 25%;">ฟังก์ชันการทำงาน</th>
+      <th style="width: 35%;">Strapi Dashboard (ภาพที่ส่งมา)</th>
+      <th style="width: 40%;">Supabase Studio (Dashboard ในตัว)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>การจัดการ Content / ตาราง</strong></td>
+      <td><span class="badge badge-strapi">Content Manager</span><br>มีเมนู Collection Types ด้านซ้าย (Category, Ticket ฯลฯ)</td>
+      <td><span class="badge badge-supabase">Table Editor</span><br>มีเมนูด้านซ้ายแสดงตารางทั้งหมด (categories, pets, shelters ฯลฯ)</td>
+    </tr>
+    <tr>
+      <td><strong>ปุ่มเพิ่มข้อมูลใหม่</strong></td>
+      <td>ปุ่มสีน้ำเงิน <code>+ Create new entry</code></td>
+      <td>ปุ่มสีเขียว <code>+ Insert row</code> (เปิดฟอร์มกรอกข้อมูลทันที)</td>
+    </tr>
+    <tr>
+      <td><strong>การจัดการรูปภาพ/ไฟล์</strong></td>
+      <td><span class="badge badge-strapi">Media Library</span><br>เก็บไฟล์ในเซิร์ฟเวอร์หรือ Cloudinary</td>
+      <td><span class="badge badge-supabase">Storage</span><br>มี Buckets (เช่น <code>pet-images</code>) พร้อม CDN URL ในตัว</td>
+    </tr>
+    <tr>
+      <td><strong>การจัดการผู้ใช้และสิทธิ์</strong></td>
+      <td><span class="badge badge-strapi">Users & Permissions Plugin</span><br>แบ่ง Role: Authenticated, Public</td>
+      <td><span class="badge badge-supabase">Authentication & Policies</span><br>จัดการ User รายคน พร้อมกำหนด Row Level Security (RLS)</td>
+    </tr>
+    <tr>
+      <td><strong>การแสดงผลข้อมูล</strong></td>
+      <td>รูปแบบ Table List พร้อม Filter & Search</td>
+      <td>รูปแบบ <strong>Spreadsheet/Grid View</strong> (แก้ไขได้สดๆ ในช่องตาราง)</td>
+    </tr>
+    <tr>
+      <td><strong>การดูความสัมพันธ์ (Relations)</strong></td>
+      <td>คลิกดูรายการเชื่อมโยง เช่น <code>1 item ▾</code></td>
+      <td>มีปุ่มลิงก์ Foreign Key ไปยังตารางที่เกี่ยวข้องได้ทันที</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. แผนผังหน้าจอ Supabase Table Editor (Content Manager)</h2>
+
+<div class="diagram-container">
++-------------------------------------------------------------------------------------------------------+
+|  [⚡ Supabase]  Project: Pet-Adoption-API                                         [Connect]  [Docs]    |
++-------------------------------------------------------------------------------------------------------+
+|  (Left Sidebar)   |  TABLE: pets (5 rows found)                                   [+ Insert row]      |
+|  ---------------- |  -------------------------------------------------------------------------------- |
+|  📊 Dashboard     |  [🔍 Search...]  [⚡ Filter]  [⇅ Sort]                                              |
+|  🗄️ Table Editor  |  +----+---------+----------------------+------------+--------+-----------+----------+ |
+|    • categories   |  | id | name    | breed                | category   | gender | status    | image    | |
+|    • shelters     |  +----+---------+----------------------+------------+--------+-----------+----------+ |
+|    • pets  <--    |  | 1  | Milo    | Golden Retriever Mix | Dog (id:1) | MALE   | AVAILABLE | img1.jpg | |
+|    • applications |  | 2  | Luna    | British Shorthair    | Cat (id:2) | FEMALE | AVAILABLE | img2.jpg | |
+|    • inquiries    |  | 3  | Coco    | Holland Lop          | Rabbit     | FEMALE | AVAILABLE | img3.jpg | |
+|    • profiles     |  | 4  | Rocky   | Siberian Husky       | Dog        | MALE   | PENDING   | img4.jpg | |
+|  🔐 Authentication|  | 5  | Bella   | Persian Cat          | Cat        | FEMALE | ADOPTED   | img5.jpg | |
+|  📦 Storage       |  +----+---------+----------------------+------------+--------+-----------+----------+ |
+|  💻 SQL Editor    |                                                                                   |
++-------------------+-----------------------------------------------------------------------------------+
+</div>
+
+<div class="page-break"></div>
+
+<!-- PAGE 3: ACCESS & SETUP -->
+<h2>3. ช่องทางการเข้าใช้งาน Supabase Dashboard (2 วิธี)</h2>
+
+<div class="card-box" style="border-left: 4px solid #10b981;">
+  <h3 style="margin-top:0; color:#047857;">วิธีที่ 1: ใช้ Supabase Cloud Dashboard (แนะนำที่สุด - สะดวกและเร็ว)</h3>
+  <p>Supabase มี Dashboard ให้ใช้งานฟรีบนคลาวด์ ไม่ต้องเปลืองทรัพยากรเครื่องคอมพิวเตอร์:</p>
+  <ol>
+    <li>เข้าไปที่ <strong><a href="https://supabase.com/dashboard" target="_blank" style="color: #047857; font-weight:600;">https://supabase.com/dashboard</a></strong> แล้วล็อกอินด้วย GitHub</li>
+    <li>เลือกโปรเจกต์ของคุณ (เช่น <code>pet-adoption-api</code>)</li>
+    <li>คลิกเมนู <strong>"Table Editor"</strong> ทางด้านซ้าย จะพบตารางทั้งหมดที่รันจากไฟล์ <code>schema.sql</code></li>
+    <li>สามารถคลิกปุ่ม <strong>"+ Insert row"</strong> เพื่อเพิ่มข้อมูลสัตว์เลี้ยงตัวใหม่ หรือแก้ไขข้อมูลได้ทันที</li>
+  </ol>
+</div>
+
+<div class="card-box" style="border-left: 4px solid #3b82f6;">
+  <h3 style="margin-top:0; color:#1d4ed8;">วิธีที่ 2: รัน Supabase Studio บนเครื่องของตนเอง (Local Docker พอร์ต 54323)</h3>
+  <p>หากต้องการรัน Dashboard ในเครื่องแบบเดียวกับที่ Strapi รันบนพอร์ต 1337:</p>
+  <div class="code-block"># 1. ติดตั้ง Supabase CLI (หากยังไม่มี)
+npm install -g supabase
+
+# 2. เริ่มการทำงานของระบบ Supabase Local Studio
+npx supabase start</div>
+  <ul>
+    <li>เมื่อคำสั่งรันเสร็จ Supabase จะเปิด Dashboard บนเครื่องที่: <strong><code>http://localhost:54323</code></strong></li>
+    <li>คุณจะได้หน้าจอ **Supabase Studio** ในเครื่องตัวเอง สามารถจัดการ Content ทุกอย่างได้แบบ Offline 100%</li>
+  </ul>
+</div>
+
+<h2>4. สรุปความคุ้มค่าและข้อได้เปรียบของ Supabase Studio</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 28%;">คุณสมบัติ</th>
+      <th style="width: 36%;">Strapi Content Manager</th>
+      <th style="width: 36%;">Supabase Studio (Dashboard)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>การจัดการฐานข้อมูล</strong></td>
+      <td>ต้องสร้างผ่าน UI ของ Strapi เท่านั้น</td>
+      <td>รองรับทั้ง <strong>UI กดเพิ่มแถว</strong> และ <strong>SQL Editor</strong></td>
+    </tr>
+    <tr>
+      <td><strong>ความเร็วในการแก้ไขข้อมูล</strong></td>
+      <td>ต้องกดเข้าไปทีละหน้าเพื่อแก้ไข</td>
+      <td><strong>Inline Editing</strong> ดับเบิลคลิกแก้ในเซลล์ตารางได้เลย</td>
+    </tr>
+    <tr>
+      <td><strong>ระบบความปลอดภัย (Security)</strong></td>
+      <td>จัดการสิทธิ์ผ่าน Controller / Policies โค้ด Node.js</td>
+      <td><strong>PostgreSQL Row Level Security (RLS)</strong> ปลอดภัยระดับชั้น Database</td>
+    </tr>
+    <tr>
+      <td><strong>การขยายขนาด (Scalability)</strong></td>
+      <td>ผูกติดกับ Node.js Instance</td>
+      <td>ใช้พลังของ PostgreSQL แท้ รองรับข้อมูลมหาศาลได้อย่างเสถียร</td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
