@@ -70,7 +70,7 @@ router.post('/api/auth/register', async (req: AuthRequest, res: Response) => {
     return res.status(400).json({ error: 'Bad Request', message: 'Email and password are required' });
   }
 
-  const assignedRole = role === 'SHELTER_STAFF' ? 'SHELTER_STAFF' : 'ADOPTER';
+  const assignedRole = (role === 'ADMIN' || role === 'SHELTER_STAFF') ? role : 'ADOPTER';
 
   const { data, error } = await dbClient.supabase.auth.signUp({
     email,
@@ -86,7 +86,21 @@ router.post('/api/auth/register', async (req: AuthRequest, res: Response) => {
   });
 
   if (error) {
-    return res.status(400).json({ error: 'Registration failed', message: error.message });
+    const errorMsg = error.message || (typeof error === 'string' ? error : JSON.stringify(error));
+    return res.status(400).json({ error: 'Registration failed', message: errorMsg });
+  }
+
+  if (data?.user?.id) {
+    try {
+      await dbClient.supabaseAdmin.from('profiles').upsert({
+        id: data.user.id,
+        email,
+        first_name: firstName || '',
+        last_name: lastName || '',
+        role: assignedRole,
+        phone: phone || '',
+      });
+    } catch {}
   }
 
   return res.status(201).json({

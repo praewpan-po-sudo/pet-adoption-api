@@ -602,7 +602,9 @@
         }
 
         if (!res.ok) {
-          errBox.textContent = data.message || 'Login failed. Please check credentials.';
+          let errorText = data.message || data.error;
+          if (typeof errorText === 'object') errorText = JSON.stringify(errorText);
+          errBox.textContent = (errorText && errorText !== '{}') ? errorText : 'Login failed. Please check your credentials.';
           errBox.style.display = 'block';
           return;
         }
@@ -636,7 +638,9 @@
         const data = await res.json();
 
         if (!res.ok) {
-          errBox.textContent = data.message || 'Registration failed.';
+          let errorText = data.message || data.error;
+          if (typeof errorText === 'object') errorText = JSON.stringify(errorText);
+          errBox.textContent = (errorText && errorText !== '{}') ? errorText : 'Registration failed. Please check Supabase triggers or try again.';
           errBox.style.display = 'block';
           return;
         }
