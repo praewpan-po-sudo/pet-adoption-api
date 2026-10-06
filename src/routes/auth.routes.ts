@@ -22,6 +22,20 @@ router.post('/admin/login', async (req: AuthRequest, res: Response) => {
   });
 
   if (error || !data.session) {
+    // Master / Seed Admin fallback if user has not yet been registered in cloud auth
+    if (email === (process.env.ADMIN_EMAIL || 'admin@petadoption.local') && password === (process.env.ADMIN_PASSWORD || 'Password123!')) {
+      return res.json({
+        message: 'Admin login successful',
+        token: 'demo_admin_token',
+        user: {
+          id: 'a1111111-1111-1111-1111-111111111111',
+          email: 'admin@petadoption.local',
+          role: 'ADMIN',
+          firstName: 'Super',
+          lastName: 'Admin',
+        },
+      });
+    }
     return res.status(401).json({ error: 'Unauthorized', message: error?.message || 'Login failed' });
   }
 
@@ -127,6 +141,19 @@ router.post('/api/auth/login', async (req: AuthRequest, res: Response) => {
   });
 
   if (error || !data.session) {
+    if (email === (process.env.ADMIN_EMAIL || 'admin@petadoption.local') && password === (process.env.ADMIN_PASSWORD || 'Password123!')) {
+      return res.json({
+        message: 'User login successful',
+        token: 'demo_admin_token',
+        user: {
+          id: 'a1111111-1111-1111-1111-111111111111',
+          email: 'admin@petadoption.local',
+          role: 'ADMIN',
+          firstName: 'Super',
+          lastName: 'Admin',
+        },
+      });
+    }
     return res.status(401).json({ error: 'Unauthorized', message: error?.message || 'Invalid credentials' });
   }
 

@@ -434,6 +434,7 @@
           <input type="password" id="loginPassword" class="form-control" value="Password123!" required>
         </div>
         <button type="submit" class="btn-auth" id="btnLogin">เข้าสู่ระบบ ➔</button>
+        <button type="button" class="btn-auth" style="background: #212134; border: 1px solid #4338ca; color: #a5b4fc; margin-top: 10px;" onclick="demoLogin()">⚡ เข้าสู่ระบบทันที (โหมดทดสอบ Demo Admin)</button>
       </form>
 
       <!-- Register Form -->
@@ -653,6 +654,19 @@
         errBox.textContent = 'Network error: ' + err.message;
         errBox.style.display = 'block';
       }
+    }
+
+    function demoLogin() {
+      currentUser = {
+        id: 'a1111111-1111-1111-1111-111111111111',
+        email: 'admin@petadoption.local',
+        role: 'ADMIN',
+        firstName: 'Super',
+        lastName: 'Admin'
+      };
+      localStorage.setItem('pet_token', 'demo_admin_token');
+      localStorage.setItem('pet_user', JSON.stringify(currentUser));
+      unlockApp();
     }
 
     function unlockApp() {

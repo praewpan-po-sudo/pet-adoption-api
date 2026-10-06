@@ -25,6 +25,19 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
 
   const token = authHeader.split(' ')[1];
 
+  // Demo Admin Token Support (for UI testing and presentations)
+  if (token === 'demo_admin_token') {
+    req.token = token;
+    req.user = {
+      id: 'a1111111-1111-1111-1111-111111111111',
+      email: 'admin@petadoption.local',
+      role: 'ADMIN',
+      firstName: 'Super',
+      lastName: 'Admin',
+    };
+    return next();
+  }
+
   try {
     const { data: { user }, error } = await dbClient.supabase.auth.getUser(token);
 
