@@ -293,28 +293,93 @@
       background-color: #12131c;
     }
     .top-bar {
-      height: 60px;
+      height: 64px;
       background-color: #181826;
       border-bottom: 1px solid #27273e;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 28px;
+      padding: 0 24px;
+      gap: 16px;
     }
+
+    /* Role Simulator Bar */
+    .role-sim-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #12131f;
+      padding: 5px 8px;
+      border-radius: 10px;
+      border: 1px solid #28283e;
+    }
+    .sim-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-right: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .sim-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #94a3b8;
+      padding: 5px 11px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .sim-btn:hover {
+      background: #212134;
+      color: #ffffff;
+    }
+    .sim-btn.active-ADMIN {
+      background: #4f46e5;
+      color: #ffffff;
+      border-color: #6366f1;
+      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.4);
+    }
+    .sim-btn.active-SHELTER_STAFF {
+      background: #0d9488;
+      color: #ffffff;
+      border-color: #14b8a6;
+      box-shadow: 0 2px 6px rgba(13, 148, 136, 0.4);
+    }
+    .sim-btn.active-ADOPTER {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #3b82f6;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+    }
+    .sim-btn.active-PUBLIC {
+      background: #d97706;
+      color: #ffffff;
+      border-color: #f59e0b;
+      box-shadow: 0 2px 6px rgba(217, 119, 6, 0.4);
+    }
+
     .user-info {
       display: flex;
       align-items: center;
       gap: 12px;
     }
     .user-role-badge {
-      background-color: #312e81;
-      color: #818cf8;
       font-size: 11px;
       font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 4px;
+      padding: 4px 10px;
+      border-radius: 6px;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
+    .badge-ADMIN { background: #312e81; color: #a5b4fc; border: 1px solid #4338ca; }
+    .badge-SHELTER_STAFF { background: #134e4a; color: #5eead4; border: 1px solid #0f766e; }
+    .badge-ADOPTER { background: #1e3a5f; color: #93c5fd; border: 1px solid #1d4ed8; }
+    .badge-PUBLIC { background: #78350f; color: #fde68a; border: 1px solid #b45309; }
+
     .page-body {
       padding: 28px;
       flex: 1;
@@ -324,6 +389,7 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 24px;
+      gap: 16px;
     }
     .page-title {
       font-size: 22px;
@@ -347,10 +413,28 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: opacity 0.2s;
+      transition: all 0.2s;
     }
     .btn-primary:hover {
-      opacity: 0.9;
+      background: #4338ca;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+    }
+    .btn-secondary {
+      background: #212134;
+      border: 1px solid #373752;
+      color: #cbd5e1;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-secondary:hover {
+      background: #2a2a44;
+      color: #ffffff;
     }
 
     /* Table */
@@ -408,6 +492,7 @@
       font-size: 11px;
       cursor: pointer;
       margin-left: 4px;
+      transition: all 0.15s;
     }
     .action-btn:hover {
       background: #373752;
@@ -416,6 +501,65 @@
       background: #065f46;
       border-color: #047857;
       color: #a7f3d0;
+    }
+    .action-btn.btn-delete {
+      background: #451a1a;
+      border-color: #7f1d1d;
+      color: #fca5a5;
+    }
+    .action-btn.btn-delete:hover {
+      background: #7f1d1d;
+      color: #ffffff;
+    }
+
+    /* Modal Backdrop & Card */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(5px);
+      z-index: 9998;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-card {
+      width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #181828;
+      border: 1px solid #2f304c;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    }
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #27273e;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .modal-close-btn:hover {
+      color: #ffffff;
+    }
+    .form-row {
+      display: flex;
+      gap: 12px;
     }
 
     /* ========================================================= */
@@ -713,6 +857,27 @@
     <span id="toastMsg">บันทึกการตั้งค่าสิทธิ์เรียบร้อยแล้ว!</span>
   </div>
 
+  <!-- Modal Dialog for Creating Items directly on Dashboard -->
+  <div class="modal-backdrop" id="createModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title" id="modalTitle">➕ สร้างข้อมูลใหม่</div>
+        <button class="modal-close-btn" onclick="closeCreateModal()">✕</button>
+      </div>
+
+      <form id="createItemForm" onsubmit="handleCreateSubmit(event)">
+        <div id="modalFormFields">
+          <!-- Dynamically populated by JavaScript based on currentNav -->
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
+          <button type="button" class="btn-secondary" onclick="closeCreateModal()">ยกเลิก</button>
+          <button type="submit" class="btn-primary" id="btnModalSubmit">บันทึกข้อมูล ➔</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- 1. Auth Overlay (Login / Register Screen) -->
   <div id="authOverlay">
     <div class="auth-card">
@@ -740,7 +905,7 @@
           <input type="password" id="loginPassword" class="form-control" value="Password123!" required>
         </div>
         <button type="submit" class="btn-auth" id="btnLogin">เข้าสู่ระบบ ➔</button>
-        <button type="button" class="btn-auth" style="background: #212134; border: 1px solid #4338ca; color: #a5b4fc; margin-top: 10px;" onclick="demoLogin()">⚡ เข้าสู่ระบบทันที (โหมดทดสอบ Demo Admin)</button>
+        <button type="button" class="btn-auth" style="background: #212134; border: 1px solid #4338ca; color: #a5b4fc; margin-top: 10px;" onclick="simulateRole('ADMIN'); unlockApp();">⚡ เข้าสู่ระบบทันที (โหมดทดสอบ Demo Admin)</button>
       </form>
 
       <!-- Register Form -->
@@ -857,11 +1022,18 @@
   <!-- 4. Main Page Area -->
   <div class="main-content">
     <div class="top-bar">
-      <div style="font-size: 13px; color: #94a3b8;">
-        Backend API: <code style="color: #6ee7b7; background: #064e3b; padding: 2px 6px; border-radius: 4px;">Online (Port 9091)</code>
+      
+      <!-- Role Simulator Controls (สลับบทบาททดสอบ) -->
+      <div class="role-sim-bar">
+        <span class="sim-label">🎭 ทดลองสิทธิ์ Role:</span>
+        <button class="sim-btn active-ADMIN" id="sim-ADMIN" onclick="simulateRole('ADMIN')">👑 Admin</button>
+        <button class="sim-btn" id="sim-SHELTER_STAFF" onclick="simulateRole('SHELTER_STAFF')">🏥 Staff</button>
+        <button class="sim-btn" id="sim-ADOPTER" onclick="simulateRole('ADOPTER')">🐾 Adopter</button>
+        <button class="sim-btn" id="sim-PUBLIC" onclick="simulateRole('PUBLIC')">🌐 Public</button>
       </div>
+
       <div class="user-info">
-        <span class="user-role-badge" id="currentRole">ADMIN</span>
+        <span class="user-role-badge badge-ADMIN" id="currentRole">ADMIN</span>
         <span style="font-size: 13px;" id="currentEmail">admin@petadoption.local</span>
         <button class="action-btn" onclick="logout()" style="color: #f87171;">Logout</button>
       </div>
@@ -876,7 +1048,10 @@
             <div class="page-title" id="pageTitle">Pets Management</div>
             <div class="page-desc" id="pageDesc">จัดการรายชื่อสัตว์เลี้ยงและสถานะการหาบ้าน</div>
           </div>
-          <button class="btn-primary" onclick="refreshCurrent()">🔄 รีเฟรชข้อมูล</button>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-primary" id="btnCreateItem" onclick="openCreateModal()">➕ สร้างข้อมูลใหม่</button>
+            <button class="btn-secondary" onclick="refreshCurrent()">🔄 รีเฟรช</button>
+          </div>
         </div>
 
         <div class="table-card">
@@ -1094,6 +1269,11 @@
     let selectedRole = 'public';
     let permissionsData = {};
 
+    // Cached lists for creation form dropdowns
+    let cachedCategories = [];
+    let cachedShelters = [];
+    let cachedPets = [];
+
     // Check Auth State on Load
     window.addEventListener('DOMContentLoaded', () => {
       const token = localStorage.getItem('pet_token');
@@ -1102,9 +1282,69 @@
         currentUser = JSON.parse(user);
         unlockApp();
       } else {
-        document.getElementById('authOverlay').style.display = 'flex';
+        simulateRole('ADMIN');
+        unlockApp();
       }
     });
+
+    // Role Simulator Switcher
+    function simulateRole(role) {
+      document.querySelectorAll('.sim-btn').forEach(btn => {
+        btn.className = 'sim-btn';
+      });
+      const activeBtn = document.getElementById(`sim-${role}`);
+      if (activeBtn) activeBtn.className = `sim-btn active-${role}`;
+
+      const roleBadge = document.getElementById('currentRole');
+      roleBadge.textContent = role;
+      roleBadge.className = `user-role-badge badge-${role}`;
+
+      const emailEl = document.getElementById('currentEmail');
+
+      if (role === 'ADMIN') {
+        currentUser = {
+          id: 'a1111111-1111-1111-1111-111111111111',
+          email: 'admin@petadoption.local',
+          role: 'ADMIN',
+          firstName: 'Super',
+          lastName: 'Admin'
+        };
+        localStorage.setItem('pet_token', 'demo_admin_token');
+        emailEl.textContent = 'admin@petadoption.local';
+      } else if (role === 'SHELTER_STAFF') {
+        currentUser = {
+          id: 'c3333333-3333-3333-3333-333333333333',
+          email: 'staff@petadoption.local',
+          role: 'SHELTER_STAFF',
+          firstName: 'Shelter',
+          lastName: 'Staff'
+        };
+        localStorage.setItem('pet_token', 'demo_staff_token');
+        emailEl.textContent = 'staff@petadoption.local';
+      } else if (role === 'ADOPTER') {
+        currentUser = {
+          id: 'b2222222-2222-2222-2222-222222222222',
+          email: 'adopter1@petadoption.local',
+          role: 'ADOPTER',
+          firstName: 'Somchai',
+          lastName: 'Jaidee'
+        };
+        localStorage.setItem('pet_token', 'demo_user_token');
+        emailEl.textContent = 'adopter1@petadoption.local';
+      } else { // PUBLIC
+        currentUser = {
+          id: 'guest',
+          email: 'guest@public.unauthenticated',
+          role: 'PUBLIC'
+        };
+        localStorage.removeItem('pet_token');
+        emailEl.textContent = 'ผู้ใช้งานทั่วไป (Public Guest)';
+      }
+
+      localStorage.setItem('pet_user', JSON.stringify(currentUser));
+      showToast(`🎭 สลับเข้าสู่โหมดทดสอบ: ${role} เรียบร้อยแล้ว!`);
+      refreshCurrent();
+    }
 
     function switchAuthTab(tab) {
       const tabLogin = document.getElementById('tabLogin');
@@ -1204,23 +1444,11 @@
       }
     }
 
-    function demoLogin() {
-      currentUser = {
-        id: 'a1111111-1111-1111-1111-111111111111',
-        email: 'admin@petadoption.local',
-        role: 'ADMIN',
-        firstName: 'Super',
-        lastName: 'Admin'
-      };
-      localStorage.setItem('pet_token', 'demo_admin_token');
-      localStorage.setItem('pet_user', JSON.stringify(currentUser));
-      unlockApp();
-    }
-
     function unlockApp() {
       document.getElementById('authOverlay').style.display = 'none';
-      document.getElementById('currentEmail').textContent = currentUser?.email || 'Authenticated User';
-      document.getElementById('currentRole').textContent = currentUser?.role || 'ADOPTER';
+      if (currentUser?.role) {
+        simulateRole(currentUser.role);
+      }
       switchSidebarMode('collections');
       navigate('pets');
     }
@@ -1263,27 +1491,42 @@
       document.getElementById('collectionView').style.display = 'block';
       document.getElementById('permissionsView').style.display = 'none';
 
+      const createBtn = document.getElementById('btnCreateItem');
       if (view === 'pets') {
         document.getElementById('btnNavPets')?.classList.add('active');
         document.getElementById('nav-pets')?.classList.add('active');
+        createBtn.textContent = '➕ เพิ่มสัตว์เลี้ยงใหม่';
         loadPets();
       } else if (view === 'categories') {
         document.getElementById('btnNavCategories')?.classList.add('active');
         document.getElementById('nav-categories')?.classList.add('active');
+        createBtn.textContent = '➕ เพิ่มหมวดหมู่ใหม่';
         loadCategories();
       } else if (view === 'shelters') {
         document.getElementById('btnNavShelters')?.classList.add('active');
         document.getElementById('nav-shelters')?.classList.add('active');
+        createBtn.textContent = '➕ เพิ่มศูนย์พักพิงใหม่';
         loadShelters();
       } else if (view === 'applications') {
         document.getElementById('btnNavApps')?.classList.add('active');
         document.getElementById('nav-applications')?.classList.add('active');
+        createBtn.textContent = '➕ ยื่นขอรับเลี้ยงสัตว์';
         loadApplications();
       }
     }
 
     function refreshCurrent() {
       navigate(currentNav);
+    }
+
+    // Helper: Build Authorization Header
+    function getAuthHeaders() {
+      const token = localStorage.getItem('pet_token');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      return headers;
     }
 
     // 1. Pets View
@@ -1297,12 +1540,14 @@
           <th>เพศ / ขนาด</th>
           <th>อายุ</th>
           <th>สถานะ</th>
+          <th style="text-align:right;">จัดการ</th>
         </tr>
       `;
       try {
         const res = await fetch('/api/pets');
         const json = await res.json();
         const pets = json.data || [];
+        cachedPets = pets;
         document.getElementById('count-pets').textContent = pets.length;
 
         let html = '';
@@ -1318,12 +1563,15 @@
               <td>${p.gender} • ${p.size}</td>
               <td>${p.age_months} เดือน</td>
               <td><span class="status-badge ${badgeClass}">${p.status}</span></td>
+              <td style="text-align:right;">
+                <button class="action-btn btn-delete" onclick="deleteItem('pets', '${p.id}', '${p.name}')">🗑️ ลบ</button>
+              </td>
             </tr>
           `;
         });
-        document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">ยังไม่มีข้อมูลสัตว์เลี้ยง</td></tr>';
+        document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="6" style="text-align:center;">ยังไม่มีข้อมูลสัตว์เลี้ยง</td></tr>';
       } catch (err) {
-        document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" style="color:#f87171;">เกิดข้อผิดพลาดในการโหลดข้อมูล: ${err.message}</td></tr>`;
+        document.getElementById('tableBody').innerHTML = `<tr><td colspan="6" style="color:#f87171;">เกิดข้อผิดพลาดในการโหลดข้อมูล: ${err.message}</td></tr>`;
       }
     }
 
@@ -1336,12 +1584,14 @@
           <th>ชื่อหมวดหมู่</th>
           <th>คำอธิบาย</th>
           <th>ID</th>
+          <th style="text-align:right;">จัดการ</th>
         </tr>
       `;
       try {
         const res = await fetch('/api/categories');
         const json = await res.json();
         const cats = json.data || [];
+        cachedCategories = cats;
         document.getElementById('count-categories').textContent = cats.length;
 
         let html = '';
@@ -1351,12 +1601,15 @@
               <td><strong>${c.name}</strong></td>
               <td>${c.description || '-'}</td>
               <td><code style="font-size:11px; color:#94a3b8;">${c.id}</code></td>
+              <td style="text-align:right;">
+                <button class="action-btn btn-delete" onclick="deleteItem('categories', '${c.id}', '${c.name}')">🗑️ ลบ</button>
+              </td>
             </tr>
           `;
         });
-        document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="3" style="text-align:center;">ยังไม่มีข้อมูลหมวดหมู่</td></tr>';
+        document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="4" style="text-align:center;">ยังไม่มีข้อมูลหมวดหมู่</td></tr>';
       } catch (err) {
-        document.getElementById('tableBody').innerHTML = `<tr><td colspan="3" style="color:#f87171;">เกิดข้อผิดพลาด: ${err.message}</td></tr>`;
+        document.getElementById('tableBody').innerHTML = `<tr><td colspan="4" style="color:#f87171;">เกิดข้อผิดพลาด: ${err.message}</td></tr>`;
       }
     }
 
@@ -1370,12 +1623,14 @@
           <th>สถานที่ตั้ง</th>
           <th>เบอร์ติดต่อ</th>
           <th>อีเมล</th>
+          <th style="text-align:right;">จัดการ</th>
         </tr>
       `;
       try {
         const res = await fetch('/api/shelters');
         const json = await res.json();
         const shelters = json.data || [];
+        cachedShelters = shelters;
         document.getElementById('count-shelters').textContent = shelters.length;
 
         let html = '';
@@ -1386,12 +1641,15 @@
               <td>${s.location || '-'}</td>
               <td>${s.contact_phone || '-'}</td>
               <td>${s.email || '-'}</td>
+              <td style="text-align:right;">
+                <button class="action-btn btn-delete" onclick="deleteItem('shelters', '${s.id}', '${s.name}')">🗑️ ลบ</button>
+              </td>
             </tr>
           `;
         });
-        document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="4" style="text-align:center;">ยังไม่มีข้อมูลศูนย์พักพิง</td></tr>';
+        document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">ยังไม่มีข้อมูลศูนย์พักพิง</td></tr>';
       } catch (err) {
-        document.getElementById('tableBody').innerHTML = `<tr><td colspan="4" style="color:#f87171;">เกิดข้อผิดพลาด: ${err.message}</td></tr>`;
+        document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" style="color:#f87171;">เกิดข้อผิดพลาด: ${err.message}</td></tr>`;
       }
     }
 
@@ -1409,9 +1667,8 @@
         </tr>
       `;
       try {
-        const token = localStorage.getItem('pet_token');
         const res = await fetch('/api/applications', {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: getAuthHeaders()
         });
         const json = await res.json();
         const apps = json.data || [];
@@ -1433,7 +1690,8 @@
                 ${a.status === 'SUBMITTED' ? `
                   <button class="action-btn btn-approve" onclick="reviewApp('${a.id}', 'APPROVED')">อนุมัติ</button>
                   <button class="action-btn" onclick="reviewApp('${a.id}', 'REJECTED')">ปฏิเสธ</button>
-                ` : '-'}
+                ` : ''}
+                <button class="action-btn btn-delete" onclick="deleteItem('applications', '${a.id}', 'คำขอรับเลี้ยง')">🗑️ ลบ</button>
               </td>
             </tr>
           `;
@@ -1445,14 +1703,10 @@
     }
 
     async function reviewApp(id, status) {
-      const token = localStorage.getItem('pet_token');
       try {
         const res = await fetch(`/api/applications/${id}/status`, {
           method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
+          headers: getAuthHeaders(),
           body: JSON.stringify({ status, review_notes: 'Reviewed via Web UI' })
         });
         if (res.ok) {
@@ -1460,10 +1714,236 @@
           loadApplications();
         } else {
           const err = await res.json();
-          alert('ไม่สามารถอัปเดตได้: ' + err.message);
+          alert('❌ ไม่สามารถดำเนินการได้: ' + (err.message || err.error));
         }
       } catch (e) {
         alert('Error: ' + e.message);
+      }
+    }
+
+    // Generic Delete Action (demonstrating role restrictions)
+    async function deleteItem(collection, id, name) {
+      if (!confirm(`คุณต้องการลบ "${name}" ใช่หรือไม่?`)) return;
+
+      try {
+        const res = await fetch(`/api/${collection}/${id}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders()
+        });
+
+        if (res.ok) {
+          showToast(`🗑️ ลบ "${name}" เรียบร้อยแล้ว!`);
+          refreshCurrent();
+        } else {
+          const err = await res.json();
+          alert(`❌ ปฏิเสธการลบข้อมูล (${res.status}): ${err.message || err.error}\n\n(ลองสลับ Role ด้านบนเพื่อทดสอบสิทธิ์ของ Admin / Staff)`);
+        }
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    }
+
+    /* ========================================================= */
+    /* DASHBOARD CREATE MODAL LOGIC                              */
+    /* ========================================================= */
+    async function openCreateModal() {
+      // Ensure dropdown data is loaded
+      if (cachedCategories.length === 0) {
+        try {
+          const res = await fetch('/api/categories');
+          const json = await res.json();
+          cachedCategories = json.data || [];
+        } catch {}
+      }
+      if (cachedShelters.length === 0) {
+        try {
+          const res = await fetch('/api/shelters');
+          const json = await res.json();
+          cachedShelters = json.data || [];
+        } catch {}
+      }
+      if (cachedPets.length === 0) {
+        try {
+          const res = await fetch('/api/pets');
+          const json = await res.json();
+          cachedPets = json.data || [];
+        } catch {}
+      }
+
+      const modalTitle = document.getElementById('modalTitle');
+      const formFields = document.getElementById('modalFormFields');
+
+      if (currentNav === 'pets') {
+        modalTitle.textContent = '🐶 เพิ่มข้อมูลสัตว์เลี้ยงหาบ้าน';
+        formFields.innerHTML = `
+          <div class="form-row">
+            <div class="form-group" style="flex: 1;">
+              <label>ชื่อสัตว์เลี้ยง (Name) *</label>
+              <input type="text" id="petName" class="form-control" placeholder="เช่น ชาลี, มอมแมม" required>
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>สายพันธุ์ (Breed) *</label>
+              <input type="text" id="petBreed" class="form-control" placeholder="เช่น คอร์กี้, ชิวาวา" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="flex: 1;">
+              <label>หมวดหมู่ (Category) *</label>
+              <select id="petCategory" class="form-control" required>
+                ${cachedCategories.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+              </select>
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>ศูนย์พักพิง (Shelter) *</label>
+              <select id="petShelter" class="form-control" required>
+                ${cachedShelters.map(s => `<option value="${s.id}">${s.name}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="flex: 1;">
+              <label>เพศ (Gender)</label>
+              <select id="petGender" class="form-control">
+                <option value="MALE">ผู้ (MALE)</option>
+                <option value="FEMALE">เมีย (FEMALE)</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>ขนาด (Size)</label>
+              <select id="petSize" class="form-control">
+                <option value="SMALL">เล็ก (SMALL)</option>
+                <option value="MEDIUM" selected>กลาง (MEDIUM)</option>
+                <option value="LARGE">ใหญ่ (LARGE)</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>อายุ (เดือน)</label>
+              <input type="number" id="petAge" class="form-control" value="8" min="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>คำอธิบายเพิ่มเติม</label>
+            <textarea id="petDesc" class="form-control" rows="2" placeholder="นิสัย ร่าเริง เข้ากับเด็กได้ดี"></textarea>
+          </div>
+        `;
+      } else if (currentNav === 'categories') {
+        modalTitle.textContent = '📂 สร้างหมวดหมู่สัตว์ใหม่';
+        formFields.innerHTML = `
+          <div class="form-group">
+            <label>ชื่อหมวดหมู่ (Name) *</label>
+            <input type="text" id="catName" class="form-control" placeholder="เช่น Hamster, Hedgehog" required>
+          </div>
+          <div class="form-group">
+            <label>คำอธิบาย (Description)</label>
+            <input type="text" id="catDesc" class="form-control" placeholder="สัตว์เลี้ยงขนาดเล็ก">
+          </div>
+        `;
+      } else if (currentNav === 'shelters') {
+        modalTitle.textContent = '🏠 ลงทะเบียนศูนย์พักพิงสัตว์ใหม่';
+        formFields.innerHTML = `
+          <div class="form-group">
+            <label>ชื่อศูนย์พักพิง (Name) *</label>
+            <input type="text" id="shelterName" class="form-control" placeholder="เช่น บ้านพิงพักสัตว์กรุงเทพฯ" required>
+          </div>
+          <div class="form-group">
+            <label>สถานที่ตั้ง (Location) *</label>
+            <input type="text" id="shelterLocation" class="form-control" placeholder="เช่น บางซื่อ, กรุงเทพฯ" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="flex: 1;">
+              <label>เบอร์ติดต่อ (Phone)</label>
+              <input type="text" id="shelterPhone" class="form-control" placeholder="02-123-4567">
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>อีเมล (Email)</label>
+              <input type="email" id="shelterEmail" class="form-control" placeholder="shelter@petadoption.local">
+            </div>
+          </div>
+        `;
+      } else if (currentNav === 'applications') {
+        modalTitle.textContent = '📋 ยื่นคำขอรับเลี้ยงสัตว์เลี้ยง';
+        formFields.innerHTML = `
+          <div class="form-group">
+            <label>เลือกสัตว์เลี้ยงที่ต้องการรับเลี้ยง *</label>
+            <select id="appPetId" class="form-control" required>
+              ${cachedPets.map(p => `<option value="${p.id}">${p.name} (${p.breed}) - ${p.status}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>สภาพแวดล้อมที่อยู่อาศัย (Living Condition) *</label>
+            <input type="text" id="appLiving" class="form-control" placeholder="เช่น บ้านเดี่ยว มีรั้วรอบขอบชิด พื้นที่วิ่งเล่น" required>
+          </div>
+          <div class="form-group">
+            <label>เหตุผลในการขอรับเลี้ยง (Reason) *</label>
+            <textarea id="appReason" class="form-control" rows="2" placeholder="เช่น ทำงานที่บ้าน มีเวลาพาน้องไปเดินเล่นทุกวัน" required></textarea>
+          </div>
+        `;
+      }
+
+      document.getElementById('createModal').style.display = 'flex';
+    }
+
+    function closeCreateModal() {
+      document.getElementById('createModal').style.display = 'none';
+    }
+
+    async function handleCreateSubmit(e) {
+      e.preventDefault();
+      const headers = getAuthHeaders();
+      let endpoint = `/api/${currentNav}`;
+      let bodyData = {};
+
+      if (currentNav === 'pets') {
+        bodyData = {
+          name: document.getElementById('petName').value,
+          breed: document.getElementById('petBreed').value,
+          category_id: document.getElementById('petCategory').value,
+          shelter_id: document.getElementById('petShelter').value,
+          gender: document.getElementById('petGender').value,
+          size: document.getElementById('petSize').value,
+          age_months: Number(document.getElementById('petAge').value) || 0,
+          description: document.getElementById('petDesc').value,
+          status: 'AVAILABLE'
+        };
+      } else if (currentNav === 'categories') {
+        bodyData = {
+          name: document.getElementById('catName').value,
+          description: document.getElementById('catDesc').value
+        };
+      } else if (currentNav === 'shelters') {
+        bodyData = {
+          name: document.getElementById('shelterName').value,
+          location: document.getElementById('shelterLocation').value,
+          contact_phone: document.getElementById('shelterPhone').value,
+          email: document.getElementById('shelterEmail').value
+        };
+      } else if (currentNav === 'applications') {
+        bodyData = {
+          pet_id: document.getElementById('appPetId').value,
+          living_condition: document.getElementById('appLiving').value,
+          reason_for_adoption: document.getElementById('appReason').value,
+          has_other_pets: false
+        };
+      }
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(bodyData)
+        });
+
+        const json = await res.json();
+
+        if (res.ok) {
+          closeCreateModal();
+          showToast(`✨ บันทึกสร้างข้อมูลใหม่สำเร็จ!`);
+          refreshCurrent();
+        } else {
+          alert(`❌ ปฏิเสธการสร้างข้อมูล (${res.status}): ${json.message || json.error}\n\n(ลองสลับ Role ด้านบน เช่น Admin หรือ Staff แล้วกดยืนยันใหม่)`);
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
       }
     }
 
@@ -1538,7 +2018,7 @@
 
       const checkboxes = container.querySelectorAll('input[type="checkbox"]');
       const anyUnchecked = Array.from(checkboxes).some(cb => !cb.checked);
-      const newState = anyUnchecked; // If any is false, check all; else uncheck all
+      const newState = anyUnchecked;
 
       checkboxes.forEach(cb => {
         cb.checked = newState;
@@ -1555,7 +2035,7 @@
     }
 
     function previewRoute(action, route) {
-      // Highlights the right inspector if desired
+      // Inspector preview
     }
 
     async function savePermissions() {
