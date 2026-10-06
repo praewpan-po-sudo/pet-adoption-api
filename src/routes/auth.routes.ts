@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { supabase, supabaseAdmin } from '../supabaseClient';
+import * as dbClient from '../supabaseClient';
 import { authenticate, requireRole, AuthRequest } from '../middleware/auth';
 
 const router = Router();
@@ -16,7 +16,7 @@ router.post('/admin/login', async (req: AuthRequest, res: Response) => {
     return res.status(400).json({ error: 'Bad Request', message: 'Email and password are required' });
   }
 
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await dbClient.supabase.auth.signInWithPassword({
     email,
     password,
   });
@@ -26,7 +26,7 @@ router.post('/admin/login', async (req: AuthRequest, res: Response) => {
   }
 
   // Verify Admin role
-  const { data: profile } = await supabaseAdmin
+  const { data: profile } = await dbClient.supabaseAdmin
     .from('profiles')
     .select('*')
     .eq('id', data.user.id)
@@ -72,7 +72,7 @@ router.post('/api/auth/register', async (req: AuthRequest, res: Response) => {
 
   const assignedRole = role === 'SHELTER_STAFF' ? 'SHELTER_STAFF' : 'ADOPTER';
 
-  const { data, error } = await supabase.auth.signUp({
+  const { data, error } = await dbClient.supabase.auth.signUp({
     email,
     password,
     options: {
@@ -107,7 +107,7 @@ router.post('/api/auth/login', async (req: AuthRequest, res: Response) => {
     return res.status(400).json({ error: 'Bad Request', message: 'Email and password are required' });
   }
 
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await dbClient.supabase.auth.signInWithPassword({
     email,
     password,
   });
@@ -116,7 +116,7 @@ router.post('/api/auth/login', async (req: AuthRequest, res: Response) => {
     return res.status(401).json({ error: 'Unauthorized', message: error?.message || 'Invalid credentials' });
   }
 
-  const { data: profile } = await supabaseAdmin
+  const { data: profile } = await dbClient.supabaseAdmin
     .from('profiles')
     .select('*')
     .eq('id', data.user.id)
@@ -144,7 +144,7 @@ router.post('/api/auth/forgot-password', async (req: AuthRequest, res: Response)
     return res.status(400).json({ error: 'Bad Request', message: 'Email is required' });
   }
 
-  const { error } = await supabase.auth.resetPasswordForEmail(email);
+  const { error } = await dbClient.supabase.auth.resetPasswordForEmail(email);
 
   if (error) {
     return res.status(400).json({ error: 'Reset failed', message: error.message });
@@ -155,7 +155,7 @@ router.post('/api/auth/forgot-password', async (req: AuthRequest, res: Response)
 
 // 2.4 User Profile
 router.get('/api/users/me', authenticate, async (req: AuthRequest, res: Response) => {
-  const { data: profile } = await supabaseAdmin
+  const { data: profile } = await dbClient.supabaseAdmin
     .from('profiles')
     .select('*')
     .eq('id', req.user?.id)

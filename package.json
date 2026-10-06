@@ -9,6 +9,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
+    "test": "tsx test/run_tests.ts",
     "seed": "tsx supabase/seed.ts",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down"

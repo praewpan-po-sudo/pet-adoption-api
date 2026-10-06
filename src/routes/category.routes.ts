@@ -1,12 +1,12 @@
 import { Router, Response } from 'express';
-import { supabase, supabaseAdmin } from '../supabaseClient';
+import * as dbClient from '../supabaseClient';
 import { authenticate, requireRole, AuthRequest } from '../middleware/auth';
 
 const router = Router();
 
-// 3.1.1 List all Categories (Public or Authenticated)
+// 3.2.1 List all Categories (Public or Authenticated)
 router.get('/', async (_req, res: Response) => {
-  const { data, error } = await supabase
+  const { data, error } = await dbClient.supabaseAdmin
     .from('categories')
     .select('*')
     .order('name', { ascending: true });
@@ -18,9 +18,9 @@ router.get('/', async (_req, res: Response) => {
   return res.json({ data });
 });
 
-// 3.1.2 Get Category by ID
+// 3.2.2 Get Category by ID
 router.get('/:id', async (req, res: Response) => {
-  const { data, error } = await supabase
+  const { data, error } = await dbClient.supabaseAdmin
     .from('categories')
     .select('*')
     .eq('id', req.params.id)
@@ -33,17 +33,17 @@ router.get('/:id', async (req, res: Response) => {
   return res.json({ data });
 });
 
-// 3.1.3 Create Category (Admin / Shelter Staff)
+// 3.2.3 Create Category (Admin / Shelter Staff)
 router.post('/', authenticate, requireRole(['ADMIN', 'SHELTER_STAFF']), async (req: AuthRequest, res: Response) => {
   const { name, description, icon_url } = req.body;
 
-  if (!name) {
+  if (!name || typeof name !== 'string' || !name.trim()) {
     return res.status(400).json({ error: 'Category name is required' });
   }
 
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await dbClient.supabaseAdmin
     .from('categories')
-    .insert([{ name, description, icon_url }])
+    .insert([{ name: name.trim(), description: description || null, icon_url: icon_url || null }])
     .select()
     .single();
 
@@ -54,27 +54,73 @@ router.post('/', authenticate, requireRole(['ADMIN', 'SHELTER_STAFF']), async (r
   return res.status(201).json({ message: 'Category created successfully', data });
 });
 
-// 3.1.4 Update Category (Admin / Shelter Staff)
-router.put('/:id', authenticate, requireRole(['ADMIN', 'SHELTER_STAFF']), async (req: AuthRequest, res: Response) => {
+// 3.2.4 Update Category (Admin / Shelter Staff)
+const updateCategoryHandler = async (req: AuthRequest, res: Response) => {
   const { name, description, icon_url } = req.body;
 
-  const { data, error } = await supabaseAdmin
+  const updatePayload: Record<string, any> = {
+    updated_at: new Date().toISOString(),
+  };
+
+  if (name !== undefined) {
+    if (typeof name !== 'string' || !name.trim()) {
+      return res.status(400).json({ error: 'Category name cannot be empty' });
+    }
+    updatePayload.name = name.trim();
+  }
+  if (description !== undefined) {
+    updatePayload.description = description;
+  }
+  if (icon_url !== undefined) {
+    updatePayload.icon_url = icon_url;
+  }
+
+  const { data, error } = await dbClient.supabaseAdmin
     .from('categories')
-    .update({ name, description, icon_url, updated_at: new Date().toISOString() })
+    .update(updatePayload)
     .eq('id', req.params.id)
     .select()
     .single();
 
   if (error) {
+    if (error.code === 'PGRST116') {
+      return res.status(404).json({ error: 'Category not found' });
+    }
     return res.status(400).json({ error: error.message });
   }
 
   return res.json({ message: 'Category updated successfully', data });
-});
+};
 
-// 3.1.5 Delete Category (Admin Only)
+router.put('/:id', authenticate, requireRole(['ADMIN', 'SHELTER_STAFF']), updateCategoryHandler);
+router.patch('/:id', authenticate, requireRole(['ADMIN', 'SHELTER_STAFF']), updateCategoryHandler);
+
+// 3.2.5 Delete Category (Admin Only)
 router.delete('/:id', authenticate, requireRole(['ADMIN']), async (req: AuthRequest, res: Response) => {
-  const { error } = await supabaseAdmin
+  const { data: category, error: findError } = await dbClient.supabaseAdmin
+    .from('categories')
+    .select('id, name')
+    .eq('id', req.params.id)
+    .single();
+
+  if (findError || !category) {
+    return res.status(404).json({ error: 'Category not found' });
+  }
+
+  // Check if any pets are assigned to this category (ON DELETE RESTRICT in DB schema)
+  const { data: assignedPets } = await dbClient.supabaseAdmin
+    .from('pets')
+    .select('id')
+    .eq('category_id', req.params.id)
+    .limit(1);
+
+  if (assignedPets && assignedPets.length > 0) {
+    return res.status(400).json({
+      error: `Cannot delete category '${category.name}' because pets are currently assigned to it.`,
+    });
+  }
+
+  const { error } = await dbClient.supabaseAdmin
     .from('categories')
     .delete()
     .eq('id', req.params.id);

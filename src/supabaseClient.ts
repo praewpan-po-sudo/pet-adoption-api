@@ -14,16 +14,16 @@ try {
 
 dotenv.config();
 
-const supabaseUrl = process.env.SUPABASE_URL || '';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const supabaseUrl = process.env.SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'placeholder-anon-key';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key';
 
-if (!supabaseUrl || !supabaseAnonKey) {
+if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
   console.warn('⚠️ Warning: SUPABASE_URL or SUPABASE_ANON_KEY is missing in environment variables.');
 }
 
 // 1. Client ทั่วไปสำหรับคำขอสาธารณะ
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export let supabase: any = createClient(supabaseUrl, supabaseAnonKey);
 
 // 2. Client ประจำตัวผู้ใช้ (สร้างพร้อมแนบ JWT Token ของ User เพื่อให้ RLS ตรวจสอบสิทธิ์ auth.uid() ได้)
 export const createScopedClient = (token: string): SupabaseClient => {
@@ -40,7 +40,7 @@ export const createScopedClient = (token: string): SupabaseClient => {
 };
 
 // 3. Admin Client (ใช้ Service Role Key สำหรับงานระบบหลังบ้านที่ต้องข้าม RLS)
-export const supabaseAdmin = supabaseServiceKey
+export let supabaseAdmin: any = supabaseServiceKey
   ? createClient(supabaseUrl, supabaseServiceKey, {
       auth: {
         autoRefreshToken: false,
@@ -48,6 +48,12 @@ export const supabaseAdmin = supabaseServiceKey
       },
     })
   : supabase;
+
+// Helper to inject mock clients during automated tests
+export function setSupabaseClients(client: any, adminClient?: any) {
+  supabase = client;
+  supabaseAdmin = adminClient || client;
+}
 
 // 4. ชื่อ Storage Bucket สำหรับจัดเก็บภาพสัตว์เลี้ยง
 export const PET_STORAGE_BUCKET = process.env.PET_STORAGE_BUCKET || 'pet-images';

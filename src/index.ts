@@ -56,7 +56,12 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
   });
 });
 
-app.listen(port, () => {
-  console.log(`🐾 Pet Adoption API server running at: http://localhost:${port}`);
-  console.log(`📡 Ready to test with api.http.simple in VS Code REST Client`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => {
+    console.log(`🐾 Pet Adoption API server running at: http://localhost:${port}`);
+    console.log(`📡 Ready to test with api.http.simple in VS Code REST Client`);
+  });
+}
+
+export { app };
+export default app;
