@@ -14,7 +14,9 @@ try {
 
 dotenv.config();
 
-const supabaseUrl = process.env.SUPABASE_URL || 'https://placeholder.supabase.co';
+const rawUrl = (process.env.SUPABASE_URL || 'https://placeholder.supabase.co').trim();
+// ป้องกันการใส่ /rest/v1 หรือเครื่องหมาย / ต่อท้าย URL โดยไม่ตั้งใจ
+const supabaseUrl = rawUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/+$/, '');
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'placeholder-anon-key';
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key';
 
