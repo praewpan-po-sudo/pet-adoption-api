@@ -107,6 +107,19 @@ router.delete('/:id', authenticate, requireRole(['ADMIN']), async (req: AuthRequ
     return res.status(404).json({ error: 'Category not found' });
   }
 
+  // Check if any pets are assigned to this category (ON DELETE RESTRICT in DB schema)
+  const { data: assignedPets } = await dbClient.supabaseAdmin
+    .from('pets')
+    .select('id')
+    .eq('category_id', req.params.id)
+    .limit(1);
+
+  if (assignedPets && assignedPets.length > 0) {
+    return res.status(400).json({
+      error: `Cannot delete category '${category.name}' because pets are currently assigned to it.`,
+    });
+  }
+
   const { error } = await dbClient.supabaseAdmin
     .from('categories')
     .delete()

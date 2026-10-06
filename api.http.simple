@@ -108,6 +108,7 @@ Authorization: Bearer {{$dotenv ADMIN_TOKEN}}
 }
 
 #### 3.1.5 Delete Shelter (ลบศูนย์พักพิงสัตว์ - Admin เท่านั้น)
+// หมายเหตุ: แนะนำให้ทดสอบลบหลังจากเสร็จสิ้นการทดสอบการสร้างสัตว์เลี้ยง เพื่อไม่ให้กระทบ SHELTER_ID ที่ใช้ในข้อ 3.3
 DELETE http://localhost:9091/api/shelters/{{$dotenv SHELTER_ID}}
 Authorization: Bearer {{$dotenv ADMIN_TOKEN}}
 

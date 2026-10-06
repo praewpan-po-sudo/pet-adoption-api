@@ -1,7 +1,7 @@
 import { Router, Response } from 'express';
 import multer from 'multer';
 import { authenticate, AuthRequest } from '../middleware/auth';
-import { supabaseAdmin, PET_STORAGE_BUCKET } from '../supabaseClient';
+import * as dbClient from '../supabaseClient';
 
 const router = Router();
 
@@ -24,8 +24,8 @@ router.post('/', authenticate, upload.single('image'), async (req: AuthRequest, 
     const filePath = `uploads/${fileName}`;
 
     // ส่งไฟล์ขึ้น Supabase Storage (Bucket: pet-images)
-    const { error: uploadError } = await supabaseAdmin.storage
-      .from(PET_STORAGE_BUCKET)
+    const { error: uploadError } = await dbClient.supabaseAdmin.storage
+      .from(dbClient.PET_STORAGE_BUCKET)
       .upload(filePath, file.buffer, {
         contentType: file.mimetype,
         upsert: false,
@@ -36,8 +36,8 @@ router.post('/', authenticate, upload.single('image'), async (req: AuthRequest, 
     }
 
     // ดึง Public URL ของภาพที่อัปโหลดสำเร็จ
-    const { data: { publicUrl } } = supabaseAdmin.storage
-      .from(PET_STORAGE_BUCKET)
+    const { data: { publicUrl } } = dbClient.supabaseAdmin.storage
+      .from(dbClient.PET_STORAGE_BUCKET)
       .getPublicUrl(filePath);
 
     return res.status(201).json({

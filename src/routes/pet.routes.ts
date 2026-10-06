@@ -32,8 +32,11 @@ router.get('/', async (req, res: Response) => {
   if (size) {
     query = query.eq('size', size as string);
   }
-  if (search) {
-    query = query.or(`name.ilike.%${search}%,breed.ilike.%${search}%,description.ilike.%${search}%`);
+  if (search && typeof search === 'string' && search.trim()) {
+    const cleanSearch = search.trim().replace(/[,()]/g, '');
+    if (cleanSearch) {
+      query = query.or(`name.ilike.%${cleanSearch}%,breed.ilike.%${cleanSearch}%,description.ilike.%${cleanSearch}%`);
+    }
   }
 
   const { data, error } = await query;
@@ -83,8 +86,21 @@ router.post('/', authenticate, requireRole(['ADMIN', 'SHELTER_STAFF']), async (r
     image_url,
   } = req.body;
 
-  if (!name || !category_id || !breed) {
-    return res.status(400).json({ error: 'name, category_id, and breed are required fields' });
+  const cleanName = typeof name === 'string' ? name.trim() : '';
+  const cleanCategory = typeof category_id === 'string' ? category_id.trim() : '';
+  const cleanBreed = typeof breed === 'string' ? breed.trim() : '';
+
+  if (!cleanName || !cleanCategory || !cleanBreed) {
+    return res.status(400).json({ error: 'name, category_id, and breed are required non-empty fields' });
+  }
+
+  let cleanAge = 0;
+  if (age_months !== undefined) {
+    const parsed = Number(age_months);
+    if (isNaN(parsed) || parsed < 0) {
+      return res.status(400).json({ error: 'age_months must be a non-negative number' });
+    }
+    cleanAge = Math.floor(parsed);
   }
 
   const cleanShelterId = (typeof shelter_id === 'string' && shelter_id.trim().length > 0) ? shelter_id.trim() : null;
@@ -93,11 +109,11 @@ router.post('/', authenticate, requireRole(['ADMIN', 'SHELTER_STAFF']), async (r
   const { data: catExists } = await dbClient.supabaseAdmin
     .from('categories')
     .select('id')
-    .eq('id', category_id)
+    .eq('id', cleanCategory)
     .single();
 
   if (!catExists) {
-    return res.status(400).json({ error: `Category with ID '${category_id}' does not exist` });
+    return res.status(400).json({ error: `Category with ID '${cleanCategory}' does not exist` });
   }
 
   // Validate shelter exists if provided
@@ -132,11 +148,11 @@ router.post('/', authenticate, requireRole(['ADMIN', 'SHELTER_STAFF']), async (r
     .from('pets')
     .insert([
       {
-        name: typeof name === 'string' ? name.trim() : name,
-        category_id,
+        name: cleanName,
+        category_id: cleanCategory,
         shelter_id: cleanShelterId,
-        breed: typeof breed === 'string' ? breed.trim() : breed,
-        age_months: age_months !== undefined ? Number(age_months) : 0,
+        breed: cleanBreed,
+        age_months: cleanAge,
         gender: gender || 'UNKNOWN',
         size: size || 'MEDIUM',
         status: status || 'AVAILABLE',
@@ -194,9 +210,28 @@ const updatePetHandler = async (req: AuthRequest, res: Response) => {
     updated_at: new Date().toISOString(),
   };
 
-  if (name !== undefined) updates.name = typeof name === 'string' ? name.trim() : name;
-  if (breed !== undefined) updates.breed = typeof breed === 'string' ? breed.trim() : breed;
-  if (age_months !== undefined) updates.age_months = Number(age_months);
+  if (name !== undefined) {
+    if (typeof name !== 'string' || !name.trim()) {
+      return res.status(400).json({ error: 'Pet name cannot be empty' });
+    }
+    updates.name = name.trim();
+  }
+
+  if (breed !== undefined) {
+    if (typeof breed !== 'string' || !breed.trim()) {
+      return res.status(400).json({ error: 'Breed cannot be empty' });
+    }
+    updates.breed = breed.trim();
+  }
+
+  if (age_months !== undefined) {
+    const parsed = Number(age_months);
+    if (isNaN(parsed) || parsed < 0) {
+      return res.status(400).json({ error: 'age_months must be a non-negative number' });
+    }
+    updates.age_months = Math.floor(parsed);
+  }
+
   if (description !== undefined) updates.description = description;
   if (medical_history !== undefined) updates.medical_history = medical_history;
   if (vaccinated !== undefined) updates.vaccinated = !!vaccinated;
@@ -204,15 +239,16 @@ const updatePetHandler = async (req: AuthRequest, res: Response) => {
   if (image_url !== undefined) updates.image_url = image_url;
 
   if (category_id !== undefined) {
+    const cleanCat = typeof category_id === 'string' ? category_id.trim() : '';
     const { data: catExists } = await dbClient.supabaseAdmin
       .from('categories')
       .select('id')
-      .eq('id', category_id)
+      .eq('id', cleanCat)
       .single();
     if (!catExists) {
       return res.status(400).json({ error: `Category with ID '${category_id}' does not exist` });
     }
-    updates.category_id = category_id;
+    updates.category_id = cleanCat;
   }
 
   if (shelter_id !== undefined) {
@@ -287,6 +323,19 @@ router.delete('/:id', authenticate, requireRole(['ADMIN', 'SHELTER_STAFF']), asy
 
   if (findError || !pet) {
     return res.status(404).json({ error: 'Pet not found' });
+  }
+
+  // Check if pet has active applications (APPROVED or UNDER_REVIEW)
+  const { data: activeApps } = await dbClient.supabaseAdmin
+    .from('adoption_applications')
+    .select('id, status')
+    .eq('pet_id', req.params.id)
+    .in('status', ['APPROVED', 'UNDER_REVIEW']);
+
+  if (activeApps && activeApps.length > 0) {
+    return res.status(400).json({
+      error: `Cannot delete pet '${pet.name}' because it has active adoption applications (${activeApps[0].status}). Please resolve applications first.`,
+    });
   }
 
   const { error } = await dbClient.supabaseAdmin

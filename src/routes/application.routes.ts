@@ -50,17 +50,25 @@ async function syncPetStatus(petId: string) {
 router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
   const { pet_id, living_condition, has_other_pets, reason_for_adoption } = req.body;
 
-  if (!pet_id || !living_condition || !reason_for_adoption) {
+  const cleanLiving = typeof living_condition === 'string' ? living_condition.trim() : '';
+  const cleanReason = typeof reason_for_adoption === 'string' ? reason_for_adoption.trim() : '';
+  const cleanPetId = typeof pet_id === 'string' ? pet_id.trim() : '';
+
+  if (!cleanPetId || !cleanLiving || !cleanReason) {
     return res.status(400).json({
-      error: 'pet_id, living_condition, and reason_for_adoption are required fields',
+      error: 'pet_id, living_condition, and reason_for_adoption are required non-empty fields',
     });
+  }
+
+  if (!req.user?.id) {
+    return res.status(401).json({ error: 'Unauthorized', message: 'User not authenticated' });
   }
 
   // Check if pet exists and check its status
   const { data: pet, error: petErr } = await dbClient.supabaseAdmin
     .from('pets')
     .select('id, name, status')
-    .eq('id', pet_id)
+    .eq('id', cleanPetId)
     .single();
 
   if (petErr || !pet) {
@@ -74,31 +82,29 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
   }
 
   // Check if applicant already submitted an active application for this pet
-  if (req.user?.id) {
-    const { data: existingApp } = await dbClient.supabaseAdmin
-      .from('adoption_applications')
-      .select('id, status')
-      .eq('pet_id', pet_id)
-      .eq('applicant_id', req.user.id)
-      .in('status', ['SUBMITTED', 'UNDER_REVIEW'])
-      .maybeSingle();
+  const { data: existingApp } = await dbClient.supabaseAdmin
+    .from('adoption_applications')
+    .select('id, status')
+    .eq('pet_id', cleanPetId)
+    .eq('applicant_id', req.user.id)
+    .in('status', ['SUBMITTED', 'UNDER_REVIEW'])
+    .maybeSingle();
 
-    if (existingApp) {
-      return res.status(400).json({
-        error: `You already have an active application (${existingApp.status}) for this pet.`,
-      });
-    }
+  if (existingApp) {
+    return res.status(400).json({
+      error: `You already have an active application (${existingApp.status}) for this pet.`,
+    });
   }
 
   const { data, error } = await dbClient.supabaseAdmin
     .from('adoption_applications')
     .insert([
       {
-        pet_id,
-        applicant_id: req.user?.id,
-        living_condition: typeof living_condition === 'string' ? living_condition.trim() : living_condition,
+        pet_id: cleanPetId,
+        applicant_id: req.user.id,
+        living_condition: cleanLiving,
         has_other_pets: !!has_other_pets,
-        reason_for_adoption: typeof reason_for_adoption === 'string' ? reason_for_adoption.trim() : reason_for_adoption,
+        reason_for_adoption: cleanReason,
         status: 'SUBMITTED',
       },
     ])
@@ -132,9 +138,11 @@ router.get('/', authenticate, async (req: AuthRequest, res: Response) => {
     `)
     .order('created_at', { ascending: false });
 
-  // If regular user (ADOPTER), only show own applications
-  if (req.user?.role === 'ADOPTER') {
-    query = query.eq('applicant_id', req.user.id);
+  const isStaffOrAdmin = req.user?.role === 'ADMIN' || req.user?.role === 'SHELTER_STAFF';
+
+  // Only STAFF and ADMIN can view all or search by applicant_id; others can only see own applications
+  if (!isStaffOrAdmin) {
+    query = query.eq('applicant_id', req.user?.id);
   } else if (applicant_id) {
     query = query.eq('applicant_id', applicant_id as string);
   }
@@ -152,7 +160,7 @@ router.get('/', authenticate, async (req: AuthRequest, res: Response) => {
     return res.status(500).json({ error: error.message });
   }
 
-  return res.json({ data });
+  return res.json({ data: data || [] });
 });
 
 // 3.4.3 Get Application by ID
@@ -171,8 +179,10 @@ router.get('/:id', authenticate, async (req: AuthRequest, res: Response) => {
     return res.status(404).json({ error: 'Application not found' });
   }
 
-  // Security check: only own application or staff/admin
-  if (req.user?.role === 'ADOPTER' && data.applicant_id !== req.user.id) {
+  const isStaffOrAdmin = req.user?.role === 'ADMIN' || req.user?.role === 'SHELTER_STAFF';
+
+  // Non-staff/admin can ONLY view their own application
+  if (!isStaffOrAdmin && data.applicant_id !== req.user?.id) {
     return res.status(403).json({ error: 'Forbidden', message: 'You do not have permission to view this application' });
   }
 
@@ -211,10 +221,27 @@ const updateApplicationHandler = async (req: AuthRequest, res: Response) => {
     updated_at: new Date().toISOString(),
   };
 
-  if (living_condition !== undefined) updates.living_condition = living_condition;
-  if (has_other_pets !== undefined) updates.has_other_pets = !!has_other_pets;
-  if (reason_for_adoption !== undefined) updates.reason_for_adoption = reason_for_adoption;
-  if (isStaffOrAdmin && review_notes !== undefined) updates.review_notes = review_notes;
+  if (living_condition !== undefined) {
+    if (typeof living_condition !== 'string' || !living_condition.trim()) {
+      return res.status(400).json({ error: 'living_condition cannot be empty' });
+    }
+    updates.living_condition = living_condition.trim();
+  }
+
+  if (has_other_pets !== undefined) {
+    updates.has_other_pets = !!has_other_pets;
+  }
+
+  if (reason_for_adoption !== undefined) {
+    if (typeof reason_for_adoption !== 'string' || !reason_for_adoption.trim()) {
+      return res.status(400).json({ error: 'reason_for_adoption cannot be empty' });
+    }
+    updates.reason_for_adoption = reason_for_adoption.trim();
+  }
+
+  if (isStaffOrAdmin && review_notes !== undefined) {
+    updates.review_notes = review_notes;
+  }
 
   const { data: updatedApp, error: updateErr } = await dbClient.supabaseAdmin
     .from('adoption_applications')
@@ -269,11 +296,15 @@ router.patch('/:id/status', authenticate, requireRole(['ADMIN', 'SHELTER_STAFF']
     .eq('id', application.pet_id)
     .single();
 
-  // Business Logic: If approving, verify that pet is not already adopted by another applicant
-  if (status === 'APPROVED') {
-    if (pet?.status === 'ADOPTED' && application.status !== 'APPROVED') {
+  if (!pet) {
+    return res.status(404).json({ error: 'Pet associated with this application not found' });
+  }
+
+  // Business Logic: If approving or reviewing, verify that pet is not already adopted by another applicant
+  if (status === 'APPROVED' || status === 'UNDER_REVIEW') {
+    if (pet.status === 'ADOPTED' && application.status !== 'APPROVED') {
       return res.status(400).json({
-        error: `Pet ${pet?.name || ''} is already adopted and cannot be approved for another application.`,
+        error: `Pet ${pet.name || ''} is already adopted and cannot be reviewed or approved for another application.`,
       });
     }
   }
@@ -303,8 +334,7 @@ router.patch('/:id/status', authenticate, requireRole(['ADMIN', 'SHELTER_STAFF']
       .eq('id', application.pet_id);
     newPetStatus = 'ADOPTED';
   } else if (status === 'UNDER_REVIEW') {
-    // Only move to PENDING if not already ADOPTED
-    if (pet?.status !== 'ADOPTED') {
+    if (pet.status !== 'ADOPTED') {
       await dbClient.supabaseAdmin
         .from('pets')
         .update({ status: 'PENDING', updated_at: new Date().toISOString() })

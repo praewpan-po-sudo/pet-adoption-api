@@ -9,6 +9,7 @@ const db = {
     { id: 'staff-uuid', email: 'staff@petadoption.local', role: 'SHELTER_STAFF', first_name: 'Shelter', last_name: 'Staff' },
     { id: 'user-uuid-1', email: 'adopter1@petadoption.local', role: 'ADOPTER', first_name: 'Somchai', last_name: 'Jaidee' },
     { id: 'user-uuid-2', email: 'adopter2@petadoption.local', role: 'ADOPTER', first_name: 'Somsri', last_name: 'Rukdee' },
+    { id: 'custom-user-uuid', email: 'custom@petadoption.local', role: 'CUSTOM_ROLE', first_name: 'Custom', last_name: 'User' },
   ],
   shelters: [
     { id: 'shelter-1', name: 'Bangkok Paws', location: 'Bangkok', contact_phone: '02-111-2222', email: 'bkk@paws.org' },
@@ -70,6 +71,7 @@ function createMockClient() {
         if (token === 'staff-token') return { data: { user: { id: 'staff-uuid', email: 'staff@petadoption.local' } }, error: null };
         if (token === 'user-token-1') return { data: { user: { id: 'user-uuid-1', email: 'adopter1@petadoption.local' } }, error: null };
         if (token === 'user-token-2') return { data: { user: { id: 'user-uuid-2', email: 'adopter2@petadoption.local' } }, error: null };
+        if (token === 'custom-role-token') return { data: { user: { id: 'custom-user-uuid', email: 'custom@petadoption.local' } }, error: null };
         return { data: { user: null }, error: { message: 'Invalid token' } };
       },
     },
@@ -204,6 +206,7 @@ async function main() {
   const supabaseClientModule = await import('../src/supabaseClient');
   supabaseClientModule.setSupabaseClients(mockClient, mockClient);
 
+  const { default: shelterRoutes } = await import('../src/routes/shelter.routes');
   const { default: categoryRoutes } = await import('../src/routes/category.routes');
   const { default: petRoutes } = await import('../src/routes/pet.routes');
   const { default: applicationRoutes } = await import('../src/routes/application.routes');
@@ -216,6 +219,7 @@ async function main() {
     res.json({ status: 'online', project: 'Pet Adoption API' });
   });
 
+  testApp.use('/api/shelters', shelterRoutes);
   testApp.use('/api/categories', categoryRoutes);
   testApp.use('/api/pets', petRoutes);
   testApp.use('/api/applications', applicationRoutes);
@@ -272,8 +276,93 @@ async function main() {
     assert.strictEqual(res.body.status, 'online');
   });
 
-  // --- SECTION 2: CATEGORIES CRUD ---
-  console.log('\n--- 2. Categories CRUD ---');
+  // --- SECTION 2: SHELTERS CRUD ---
+  console.log('\n--- 2. Shelters CRUD ---');
+  let createdShelterId = '';
+
+  await test('GET /api/shelters returns list of shelters', async () => {
+    const res = await request('/api/shelters');
+    assert.strictEqual(res.status, 200);
+    assert.ok(Array.isArray(res.body.data));
+    assert.ok(res.body.data.length >= 1);
+  });
+
+  await test('POST /api/shelters requires ADMIN role', async () => {
+    const res = await request('/api/shelters', {
+      method: 'POST',
+      token: 'user-token-1',
+      body: { name: 'Happy Paws', location: 'Bangkok' },
+    });
+    assert.strictEqual(res.status, 403);
+  });
+
+  await test('POST /api/shelters validates required name and location', async () => {
+    const res = await request('/api/shelters', {
+      method: 'POST',
+      token: 'admin-token',
+      body: { name: '   ', location: '' },
+    });
+    assert.strictEqual(res.status, 400);
+  });
+
+  await test('POST /api/shelters creates shelter (Admin)', async () => {
+    const res = await request('/api/shelters', {
+      method: 'POST',
+      token: 'admin-token',
+      body: {
+        name: 'Happy Paws Sanctuary Bangkok',
+        location: 'Bang Sue, Bangkok',
+        contact_phone: '+66-2-555-1234',
+        email: 'contact@happypaws.org',
+      },
+    });
+    assert.strictEqual(res.status, 201);
+    assert.strictEqual(res.body.data.name, 'Happy Paws Sanctuary Bangkok');
+    createdShelterId = res.body.data.id;
+  });
+
+  await test('GET /api/shelters/:id returns shelter by ID', async () => {
+    const res = await request(`/api/shelters/${createdShelterId}`);
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.body.data.name, 'Happy Paws Sanctuary Bangkok');
+  });
+
+  await test('PUT /api/shelters/:id updates shelter (Admin)', async () => {
+    const res = await request(`/api/shelters/${createdShelterId}`, {
+      method: 'PUT',
+      token: 'admin-token',
+      body: {
+        name: 'Happy Paws Foundation Bangkok',
+        location: 'Bang Sue, Bangkok 10800',
+      },
+    });
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.body.data.name, 'Happy Paws Foundation Bangkok');
+  });
+
+  await test('PATCH /api/shelters/:id updates partial shelter data', async () => {
+    const res = await request(`/api/shelters/${createdShelterId}`, {
+      method: 'PATCH',
+      token: 'admin-token',
+      body: { contact_phone: '+66-2-555-9999' },
+    });
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(res.body.data.contact_phone, '+66-2-555-9999');
+  });
+
+  await test('DELETE /api/shelters/:id deletes shelter (Admin)', async () => {
+    const res = await request(`/api/shelters/${createdShelterId}`, {
+      method: 'DELETE',
+      token: 'admin-token',
+    });
+    assert.strictEqual(res.status, 200);
+
+    const checkRes = await request(`/api/shelters/${createdShelterId}`);
+    assert.strictEqual(checkRes.status, 404);
+  });
+
+  // --- SECTION 3: CATEGORIES CRUD ---
+  console.log('\n--- 3. Categories CRUD ---');
   let createdCatId = '';
 
   await test('GET /api/categories returns list of categories', async () => {
@@ -336,7 +425,17 @@ async function main() {
     assert.strictEqual(res.body.data.name, 'Hamster & Rodents');
   });
 
-  await test('DELETE /api/categories/:id deletes category (Admin)', async () => {
+  await test('DELETE /api/categories/:id prevents deleting category assigned to pets', async () => {
+    // cat-1 is assigned to pet-1 (Milo) in db.pets
+    const res = await request('/api/categories/cat-1', {
+      method: 'DELETE',
+      token: 'admin-token',
+    });
+    assert.strictEqual(res.status, 400);
+    assert.ok(res.body.error.includes('assigned to it'));
+  });
+
+  await test('DELETE /api/categories/:id deletes category without assigned pets (Admin)', async () => {
     const res = await request(`/api/categories/${createdCatId}`, {
       method: 'DELETE',
       token: 'admin-token',
@@ -371,6 +470,25 @@ async function main() {
       body: { name: 'Incomplete' },
     });
     assert.strictEqual(res.status, 400);
+  });
+
+  await test('POST /api/pets rejects whitespace name or breed', async () => {
+    const res = await request('/api/pets', {
+      method: 'POST',
+      token: 'admin-token',
+      body: { name: '   ', category_id: 'cat-1', breed: '   ' },
+    });
+    assert.strictEqual(res.status, 400);
+  });
+
+  await test('POST /api/pets rejects negative or NaN age_months', async () => {
+    const res = await request('/api/pets', {
+      method: 'POST',
+      token: 'admin-token',
+      body: { name: 'Rocky', category_id: 'cat-1', breed: 'Beagle', age_months: -5 },
+    });
+    assert.strictEqual(res.status, 400);
+    assert.ok(res.body.error.includes('non-negative'));
   });
 
   await test('POST /api/pets validates non-existent category_id', async () => {
@@ -443,6 +561,19 @@ async function main() {
     assert.strictEqual(res.status, 400);
   });
 
+  await test('POST /api/applications rejects whitespace living_condition or reason', async () => {
+    const res = await request('/api/applications', {
+      method: 'POST',
+      token: 'user-token-1',
+      body: {
+        pet_id: createdPetId,
+        living_condition: '   ',
+        reason_for_adoption: '   ',
+      },
+    });
+    assert.strictEqual(res.status, 400);
+  });
+
   await test('POST /api/applications fails for non-existent pet', async () => {
     const res = await request('/api/applications', {
       method: 'POST',
@@ -495,6 +626,15 @@ async function main() {
     assert.strictEqual(res.body.data.length, 1);
   });
 
+  await test('BOLA Protection: User with non-staff/custom role cannot list other users applications', async () => {
+    const res = await request('/api/applications', {
+      token: 'custom-role-token',
+    });
+    assert.strictEqual(res.status, 200);
+    assert.ok(Array.isArray(res.body.data));
+    assert.strictEqual(res.body.data.length, 0);
+  });
+
   await test('GET /api/applications/:id allows adopter to view own application', async () => {
     const res = await request(`/api/applications/${applicationId}`, {
       token: 'user-token-1',
@@ -508,6 +648,24 @@ async function main() {
       token: 'user-token-2',
     });
     assert.strictEqual(res.status, 403);
+  });
+
+  await test('BOLA Protection: User with non-staff/custom role cannot view application by ID', async () => {
+    const res = await request(`/api/applications/${applicationId}`, {
+      token: 'custom-role-token',
+    });
+    assert.strictEqual(res.status, 403);
+  });
+
+  await test('PUT /api/applications/:id rejects empty living_condition', async () => {
+    const res = await request(`/api/applications/${applicationId}`, {
+      method: 'PUT',
+      token: 'user-token-1',
+      body: {
+        living_condition: '   ',
+      },
+    });
+    assert.strictEqual(res.status, 400);
   });
 
   await test('PUT /api/applications/:id allows adopter to update submitted application', async () => {
@@ -595,6 +753,44 @@ async function main() {
     });
     assert.strictEqual(res.status, 400);
     assert.ok(res.body.error.includes('already adopted'));
+
+    db.adoption_applications = db.adoption_applications.filter(a => a.id !== 'app-fake-2');
+  });
+
+  // BUSINESS LOGIC: Cannot put another application UNDER_REVIEW when pet is already ADOPTED
+  await test('Business Logic: Cannot move another application to UNDER_REVIEW if pet is already ADOPTED', async () => {
+    const fakeAppId = 'app-fake-review';
+    db.adoption_applications.push({
+      id: fakeAppId,
+      pet_id: createdPetId,
+      applicant_id: 'user-uuid-2',
+      status: 'SUBMITTED',
+      living_condition: 'House',
+      has_other_pets: false,
+      reason_for_adoption: 'Good care',
+    });
+
+    const res = await request(`/api/applications/${fakeAppId}/status`, {
+      method: 'PATCH',
+      token: 'admin-token',
+      body: {
+        status: 'UNDER_REVIEW',
+      },
+    });
+    assert.strictEqual(res.status, 400);
+    assert.ok(res.body.error.includes('already adopted'));
+
+    db.adoption_applications = db.adoption_applications.filter(a => a.id !== 'app-fake-review');
+  });
+
+  // ACTIVE APPLICATION PROTECTION: Cannot delete pet while it has an active adoption application
+  await test('Active Application Protection: Cannot delete pet with active adopted application', async () => {
+    const res = await request(`/api/pets/${createdPetId}`, {
+      method: 'DELETE',
+      token: 'admin-token',
+    });
+    assert.strictEqual(res.status, 400);
+    assert.ok(res.body.error.includes('active adoption applications'));
   });
 
   // BUSINESS LOGIC: Rejecting/Cancelling approved application reverts pet to AVAILABLE
