@@ -110,9 +110,9 @@ Content-Type: application/json
 Authorization: Bearer {{adminToken}}
 
 {
-    "name": "Happy Paws Sanctuary Bangkok",
+    "name": "meaws",
     "location": "Bang Sue, Bangkok, Thailand",
-    "contact_phone": "+66-2-555-1234",
+    "contact_phone": "+66-2-555-5634",
     "email": "contact@happypaws.org"
 }
 
@@ -130,8 +130,8 @@ Content-Type: application/json
 Authorization: Bearer {{adminToken}}
 
 {
-    "name": "Happy Paws Foundation Bangkok",
-    "location": "Bang Sue, Bangkok 10800, Thailand",
+    "name": "Happy Bangkok",
+    "location": "Bang Sue, Bangkok 10850, Thailand",
     "contact_phone": "+66-2-555-9999",
     "email": "info@happypaws.org"
 }
@@ -151,8 +151,8 @@ Content-Type: application/json
 Authorization: Bearer {{adminToken}}
 
 {
-    "name": "Hamster",
-    "description": "Small and cute pocket pets",
+    "name": "Snakes and Lizards",
+    "description": "Reptiles including snakes, lizards, and geckos",
     "icon_url": "https://images.unsplash.com/photo-1548767797-d8c844163c4c"
 }
 
@@ -164,15 +164,6 @@ Authorization: Bearer {{adminToken}}
 #### 3.2.3 Get Category by ID (ดึง categoryId อัตโนมัติ)
 GET {{baseUrl}}/api/categories/{{categoryId}}
 
-#### 3.2.4 Update Category (แก้ไขหมวดหมู่ - Admin เท่านั้น)
-PUT {{baseUrl}}/api/categories/{{categoryId}}
-Content-Type: application/json
-Authorization: Bearer {{adminToken}}
-
-{
-    "name": "Hamster & Small Rodents",
-    "description": "Small pocket pets including dwarf hamsters and gerbils"
-}
 
 ---
 
@@ -189,11 +180,11 @@ Content-Type: application/json
 Authorization: Bearer {{adminToken}}
 
 {
-    "name": "Charlie",
+    "name": "Barkley",
     "category_id": "{{categoryId}}",
     "shelter_id": "{{shelterId}}",
-    "breed": "Corgi",
-    "age_months": 10,
+    "breed": "Dachshund",
+    "age_months": 5,
     "gender": "MALE",
     "size": "MEDIUM",
     "status": "AVAILABLE",
@@ -222,17 +213,6 @@ Authorization: Bearer {{adminToken}}
     "status": "AVAILABLE"
 }
 
-#### 3.3.5 Ask Question / Inquiry about Pet (ผู้สนใจสอบถามข้อมูลเพิ่มเติม)
-// ใช้ petId และ userToken อัตโนมัติ
-POST {{baseUrl}}/api/pets/{{petId}}/inquiries
-Content-Type: application/json
-Authorization: Bearer {{userToken}}
-
-{
-    "message": "น้องเข้ากับแมวหรือเด็กเล็กได้ดีไหมครับ?"
-}
-
----
 
 ### 3.4 Adoption Applications (ระบบคำขอรับเลี้ยงสัตว์)
 

@@ -898,11 +898,11 @@
       <form id="loginForm" onsubmit="handleLogin(event)">
         <div class="form-group">
           <label>อีเมล (Email)</label>
-          <input type="email" id="loginEmail" class="form-control" value="admin@petadoption.local" required>
+          <input type="email" id="loginEmail" class="form-control" value="" autocomplete="off" required>
         </div>
         <div class="form-group">
-          <label>รหัสผ่าน (Password)</label>
-          <input type="password" id="loginPassword" class="form-control" value="Password123!" required>
+          <label> (Password)</label>
+          <input type="password" id="loginPassword" class="form-control" value="" autocomplete="off" required>
         </div>
         <button type="submit" class="btn-auth" id="btnLogin">เข้าสู่ระบบ ➔</button>
         <button type="button" class="btn-auth" style="background: #212134; border: 1px solid #4338ca; color: #a5b4fc; margin-top: 10px;" onclick="simulateRole('ADMIN'); unlockApp();">⚡ เข้าสู่ระบบทันที (โหมดทดสอบ Demo Admin)</button>
@@ -1034,7 +1034,7 @@
 
       <div class="user-info">
         <span class="user-role-badge badge-ADMIN" id="currentRole">ADMIN</span>
-        <span style="font-size: 13px;" id="currentEmail">admin@petadoption.local</span>
+        <span style="font-size: 13px;" id="currentEmail"></span>
         <button class="action-btn" onclick="logout()" style="color: #f87171;">Logout</button>
       </div>
     </div>
@@ -1282,8 +1282,16 @@
         currentUser = JSON.parse(user);
         unlockApp();
       } else {
-        simulateRole('ADMIN');
-        unlockApp();
+        // Show empty login form on first load; do not auto-fill demo credentials
+        document.getElementById('authOverlay').style.display = 'flex';
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('tabLogin').classList.add('active');
+        document.getElementById('tabRegister').classList.remove('active');
+        const emailInput = document.getElementById('loginEmail');
+        const passInput = document.getElementById('loginPassword');
+        if (emailInput) emailInput.value = '';
+        if (passInput) passInput.value = '';
       }
     });
 
@@ -1310,7 +1318,7 @@
           lastName: 'Admin'
         };
         localStorage.setItem('pet_token', 'demo_admin_token');
-        emailEl.textContent = 'admin@petadoption.local';
+        if (emailEl) emailEl.textContent = 'admin@petadoption.local';
       } else if (role === 'SHELTER_STAFF') {
         currentUser = {
           id: 'c3333333-3333-3333-3333-333333333333',
@@ -1334,11 +1342,11 @@
       } else { // PUBLIC
         currentUser = {
           id: 'guest',
-          email: 'guest@public.unauthenticated',
+          email: '',
           role: 'PUBLIC'
         };
         localStorage.removeItem('pet_token');
-        emailEl.textContent = 'ผู้ใช้งานทั่วไป (Public Guest)';
+        if (emailEl) emailEl.textContent = ' (Public Guest)';
       }
 
       localStorage.setItem('pet_user', JSON.stringify(currentUser));
@@ -1436,8 +1444,8 @@
 
         alert('ลงทะเบียนสำเร็จ! กรุณาเข้าสู่ระบบ');
         switchAuthTab('login');
-        document.getElementById('loginEmail').value = email;
-        document.getElementById('loginPassword').value = password;
+        document.getElementById('loginEmail').value = '';
+        document.getElementById('loginPassword').value = '';
       } catch (err) {
         errBox.textContent = 'Network error: ' + err.message;
         errBox.style.display = 'block';
@@ -1459,6 +1467,11 @@
       currentUser = null;
       document.getElementById('authOverlay').style.display = 'flex';
       switchAuthTab('login');
+      const emailInput = document.getElementById('loginEmail');
+      const passInput = document.getElementById('loginPassword');
+      if (emailInput) emailInput.value = '';
+      if (passInput) passInput.value = '';
+      document.getElementById('authError').style.display = 'none';
     }
 
     // Toggle Sidebar Mode between "Collections" and "Settings"

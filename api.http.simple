@@ -164,15 +164,6 @@ Authorization: Bearer {{adminToken}}
 #### 3.2.3 Get Category by ID (ดึง categoryId อัตโนมัติ)
 GET {{baseUrl}}/api/categories/{{categoryId}}
 
-#### 3.2.4 Update Category (แก้ไขหมวดหมู่ - Admin เท่านั้น)
-PUT {{baseUrl}}/api/categories/{{categoryId}}
-Content-Type: application/json
-Authorization: Bearer {{adminToken}}
-
-{
-    "name": "Hamster & Small Rodents",
-    "description": "Small pocket pets including dwarf hamsters and gerbils"
-}
 
 ---
 
@@ -220,16 +211,6 @@ Authorization: Bearer {{adminToken}}
 {
     "description": "Cheerful and energetic dog with short legs. Updated medical check complete.",
     "status": "AVAILABLE"
-}
-
-#### 3.3.5 Ask Question / Inquiry about Pet (ผู้สนใจสอบถามข้อมูลเพิ่มเติม)
-// ใช้ petId และ userToken อัตโนมัติ
-POST {{baseUrl}}/api/pets/{{petId}}/inquiries
-Content-Type: application/json
-Authorization: Bearer {{userToken}}
-
-{
-    "message": "น้องเข้ากับแมวหรือเด็กเล็กได้ดีไหมครับ?"
 }
 
 ---
