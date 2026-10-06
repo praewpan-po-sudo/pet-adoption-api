@@ -6,6 +6,7 @@ import categoryRoutes from './routes/category.routes';
 import petRoutes from './routes/pet.routes';
 import applicationRoutes from './routes/application.routes';
 import uploadRoutes from './routes/upload.routes';
+import permissionRoutes from './routes/permission.routes';
 
 import path from 'path';
 import shelterRoutes from './routes/shelter.routes';
@@ -46,6 +47,7 @@ app.use('/api/shelters', shelterRoutes);
 app.use('/api/pets', petRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/admin/roles', permissionRoutes);
 
 // Error Handling Middleware
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

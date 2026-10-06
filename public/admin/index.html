@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pet Adoption - Secure Content Manager</title>
+  <title>Pet Adoption - Content & Permissions Manager</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
@@ -197,27 +197,38 @@
       color: #fca5a5;
     }
 
-    /* Secondary Sidebar: Collection Types */
+    /* Secondary Sidebar: Collection Types / Settings */
     .collection-sidebar {
-      width: 240px;
+      width: 250px;
       background-color: #151624;
       border-right: 1px solid #27273e;
       padding: 24px 16px;
       display: flex;
       flex-direction: column;
       gap: 16px;
+      overflow-y: auto;
     }
     .sidebar-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       color: #94a3b8;
       text-transform: uppercase;
       letter-spacing: 0.8px;
+      margin-bottom: 4px;
+    }
+    .sidebar-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-top: 14px;
+      margin-bottom: 4px;
     }
     .nav-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
     .nav-item {
       display: flex;
@@ -251,11 +262,10 @@
       background-color: #4338ca;
       color: #ffffff;
     }
+
+    /* Official Supabase Studio Link */
     .studio-link {
       margin-top: auto;
-      display: flex;
-      align-items: center;
-      gap: 8px;
       padding: 10px 14px;
       background: #1e1b4b;
       border: 1px solid #3730a3;
@@ -264,6 +274,9 @@
       text-decoration: none;
       font-size: 12px;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       transition: all 0.2s;
     }
     .studio-link:hover {
@@ -271,21 +284,22 @@
       color: #ffffff;
     }
 
-    /* Main Content Area */
+    /* Main Page Area */
     .main-content {
       flex: 1;
       display: flex;
       flex-direction: column;
-      background-color: #12131c;
       overflow-y: auto;
+      background-color: #12131c;
     }
     .top-bar {
-      height: 64px;
+      height: 60px;
+      background-color: #181826;
       border-bottom: 1px solid #27273e;
-      padding: 0 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: 0 28px;
     }
     .user-info {
       display: flex;
@@ -293,8 +307,8 @@
       gap: 12px;
     }
     .user-role-badge {
-      background: #3730a3;
-      color: #c7d2fe;
+      background-color: #312e81;
+      color: #818cf8;
       font-size: 11px;
       font-weight: 700;
       padding: 3px 8px;
@@ -403,9 +417,301 @@
       border-color: #047857;
       color: #a7f3d0;
     }
+
+    /* ========================================================= */
+    /* STRAPI-STYLE ROLES & PERMISSIONS SETTINGS UI              */
+    /* ========================================================= */
+    #permissionsView {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .perm-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #27273e;
+    }
+    .perm-back-btn {
+      color: #818cf8;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      background: none;
+      border: none;
+    }
+    .perm-role-select-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .perm-role-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .perm-role-desc {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    .perm-role-dropdown {
+      background: #212134;
+      border: 1px solid #373752;
+      color: #ffffff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+    .btn-save-strapi {
+      background: #4945ff;
+      color: #ffffff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-save-strapi:hover {
+      background: #3934f0;
+      box-shadow: 0 4px 12px rgba(73, 69, 255, 0.4);
+    }
+    .perm-grid-container {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      align-items: start;
+    }
+    .perm-left-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .perm-sec-header {
+      margin-bottom: 8px;
+    }
+    .perm-sec-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .perm-sec-sub {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    /* Accordion Card */
+    .perm-accordion-card {
+      background: #181828;
+      border: 1px solid #2a2a44;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .perm-accordion-card:hover {
+      border-color: #3e3e60;
+    }
+    .perm-card-head {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+    }
+    .perm-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #a5b4fc;
+    }
+    .perm-card-sub {
+      font-size: 12.5px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+    .perm-card-chevron {
+      font-size: 14px;
+      color: #94a3b8;
+      transition: transform 0.2s;
+    }
+    .perm-accordion-card.open .perm-card-chevron {
+      transform: rotate(180deg);
+    }
+    .perm-card-body {
+      padding: 0 20px 20px 20px;
+      border-top: 1px solid #232338;
+      background: #151522;
+      display: none;
+    }
+    .perm-accordion-card.open .perm-card-body {
+      display: block;
+    }
+    .perm-sub-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0 10px 0;
+    }
+    .perm-sub-name {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #64748b;
+    }
+    .perm-select-all {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #818cf8;
+      background: #232338;
+      border: 1px solid #373752;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .perm-select-all:hover {
+      background: #2d2b55;
+    }
+
+    /* Actions Checkbox Grid */
+    .perm-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .perm-check-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: #1c1c2e;
+      border: 1px solid #2a2a44;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .perm-check-label:hover {
+      background: #232338;
+      border-color: #4f46e5;
+    }
+    .perm-check-label input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: #4945ff;
+      cursor: pointer;
+    }
+    .perm-check-label input[type="checkbox"]:checked + span {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* Advanced Settings / Right Column */
+    .perm-right-col {
+      background: #181828;
+      border: 1px solid #2a2a44;
+      border-radius: 8px;
+      padding: 20px;
+      position: sticky;
+      top: 20px;
+    }
+    .adv-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+    .adv-sub {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .adv-route-card {
+      background: #13131f;
+      border: 1px solid #232338;
+      border-radius: 6px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .adv-route-action {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .adv-route-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .badge-get { background: #075985; color: #7dd3fc; }
+    .badge-post { background: #065f46; color: #a7f3d0; }
+    .badge-put { background: #854d0e; color: #fde047; }
+    .badge-delete { background: #7f1d1d; color: #fca5a5; }
+    .adv-route-path {
+      font-family: monospace;
+      font-size: 12px;
+      color: #a5b4fc;
+      background: #1e1b4b;
+      padding: 4px 8px;
+      border-radius: 4px;
+      word-break: break-all;
+    }
+
+    /* Toast Notification */
+    #strapiToast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: #065f46;
+      border: 1px solid #059669;
+      color: #ecfdf5;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      z-index: 10000;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Toast Notification -->
+  <div id="strapiToast">
+    <span>✓</span>
+    <span id="toastMsg">บันทึกการตั้งค่าสิทธิ์เรียบร้อยแล้ว!</span>
+  </div>
 
   <!-- 1. Auth Overlay (Login / Register Screen) -->
   <div id="authOverlay">
@@ -413,7 +719,7 @@
       <div class="auth-header">
         <div class="auth-logo">🐾</div>
         <div class="auth-title">Pet Adoption Platform</div>
-        <div class="auth-subtitle">ระบบบริหารจัดการฐานข้อมูล & เนื้อหาหลังบ้าน</div>
+        <div class="auth-subtitle">ระบบบริหารจัดการฐานข้อมูล & สิทธิ์การเข้าถึงหลังบ้าน</div>
       </div>
 
       <div class="auth-tabs">
@@ -472,34 +778,72 @@
 
   <!-- 2. Left Icon Bar -->
   <div class="icon-bar">
-    <div class="logo-box" title="Pet Adoption CMS" onclick="navigate('pets')">🐾</div>
-    <button class="icon-btn active" id="btnNavPets" title="สัตว์เลี้ยง (Pets)" onclick="navigate('pets')">🐶</button>
-    <button class="icon-btn" id="btnNavCategories" title="หมวดหมู่ (Categories)" onclick="navigate('categories')">📂</button>
-    <button class="icon-btn" id="btnNavShelters" title="ศูนย์พักพิง (Shelters)" onclick="navigate('shelters')">🏠</button>
-    <button class="icon-btn" id="btnNavApps" title="ใบสมัครรับเลี้ยง (Applications)" onclick="navigate('applications')">📋</button>
+    <div class="logo-box" title="Pet Adoption CMS" onclick="switchSidebarMode('collections'); navigate('pets');">🐾</div>
+    <button class="icon-btn active" id="btnNavPets" title="สัตว์เลี้ยง (Pets)" onclick="switchSidebarMode('collections'); navigate('pets');">🐶</button>
+    <button class="icon-btn" id="btnNavCategories" title="หมวดหมู่ (Categories)" onclick="switchSidebarMode('collections'); navigate('categories');">📂</button>
+    <button class="icon-btn" id="btnNavShelters" title="ศูนย์พักพิง (Shelters)" onclick="switchSidebarMode('collections'); navigate('shelters');">🏠</button>
+    <button class="icon-btn" id="btnNavApps" title="ใบสมัครรับเลี้ยง (Applications)" onclick="switchSidebarMode('collections'); navigate('applications');">📋</button>
     
+    <!-- Settings Icon (Strapi Style) -->
+    <button class="icon-btn" id="btnNavSettings" title="ตั้งค่าระบบ & สิทธิ์การเข้าถึง (Settings & Roles)" onclick="switchSidebarMode('settings');">⚙️</button>
+
     <button class="icon-btn logout-btn" title="ออกจากระบบ (Logout)" onclick="logout()">🚪</button>
   </div>
 
   <!-- 3. Secondary Sidebar -->
-  <div class="collection-sidebar">
-    <div class="sidebar-title">Collections</div>
-    <div class="nav-list">
-      <div class="nav-item active" id="nav-pets" onclick="navigate('pets')">
-        <span>🐶 Pets (สัตว์เลี้ยง)</span>
-        <span class="nav-count" id="count-pets">0</span>
+  <div class="collection-sidebar" id="sidebarContainer">
+    
+    <!-- Collections Mode List -->
+    <div id="sidebarCollections">
+      <div class="sidebar-title">Collections</div>
+      <div class="nav-list">
+        <div class="nav-item active" id="nav-pets" onclick="navigate('pets')">
+          <span>🐶 Pets (สัตว์เลี้ยง)</span>
+          <span class="nav-count" id="count-pets">0</span>
+        </div>
+        <div class="nav-item" id="nav-categories" onclick="navigate('categories')">
+          <span>📂 Categories (หมวดหมู่)</span>
+          <span class="nav-count" id="count-categories">0</span>
+        </div>
+        <div class="nav-item" id="nav-shelters" onclick="navigate('shelters')">
+          <span>🏠 Shelters (ศูนย์พักพิง)</span>
+          <span class="nav-count" id="count-shelters">0</span>
+        </div>
+        <div class="nav-item" id="nav-applications" onclick="navigate('applications')">
+          <span>📋 Applications (คำขอ)</span>
+          <span class="nav-count" id="count-applications">0</span>
+        </div>
       </div>
-      <div class="nav-item" id="nav-categories" onclick="navigate('categories')">
-        <span>📂 Categories (หมวดหมู่)</span>
-        <span class="nav-count" id="count-categories">0</span>
+    </div>
+
+    <!-- Settings Mode List (Strapi Style) -->
+    <div id="sidebarSettings" style="display: none;">
+      <div class="sidebar-title">Settings</div>
+      
+      <div class="sidebar-section-title">ADMINISTRATION PANEL</div>
+      <div class="nav-list">
+        <div class="nav-item" onclick="openRolesSettings()">
+          <span>🛡️ Roles</span>
+        </div>
+        <div class="nav-item" onclick="alert('Users Management: ดูรายชื่อและจัดการผู้ใช้งานในระบบ');">
+          <span>👤 Users</span>
+        </div>
       </div>
-      <div class="nav-item" id="nav-shelters" onclick="navigate('shelters')">
-        <span>🏠 Shelters (ศูนย์พักพิง)</span>
-        <span class="nav-count" id="count-shelters">0</span>
-      </div>
-      <div class="nav-item" id="nav-applications" onclick="navigate('applications')">
-        <span>📋 Applications (คำขอ)</span>
-        <span class="nav-count" id="count-applications">0</span>
+
+      <div class="sidebar-section-title">USERS & PERMISSIONS PLUGIN</div>
+      <div class="nav-list">
+        <div class="nav-item active" id="nav-roles-settings" onclick="openRolesSettings()">
+          <span>🔒 Roles (สิทธิ์การเข้าถึง)</span>
+        </div>
+        <div class="nav-item" onclick="alert('Providers: รองรับ Email/Password และ Supabase OAuth');">
+          <span>🌐 Providers</span>
+        </div>
+        <div class="nav-item" onclick="alert('Email Templates: เทมเพลตอีเมลแจ้งเตือนการอนุมัติ');">
+          <span>✉️ Email templates</span>
+        </div>
+        <div class="nav-item" onclick="alert('Advanced Settings: นโยบายความปลอดภัยและ Session Token');">
+          <span>⚙️ Advanced settings</span>
+        </div>
       </div>
     </div>
 
@@ -524,26 +868,231 @@
     </div>
 
     <div class="page-body">
-      <div class="page-header">
-        <div>
-          <div class="page-title" id="pageTitle">Pets Management</div>
-          <div class="page-desc" id="pageDesc">จัดการรายชื่อสัตว์เลี้ยงและสถานะการหาบ้าน</div>
+
+      <!-- View A: Collection Tables (Pets, Categories, Shelters, Applications) -->
+      <div id="collectionView">
+        <div class="page-header">
+          <div>
+            <div class="page-title" id="pageTitle">Pets Management</div>
+            <div class="page-desc" id="pageDesc">จัดการรายชื่อสัตว์เลี้ยงและสถานะการหาบ้าน</div>
+          </div>
+          <button class="btn-primary" onclick="refreshCurrent()">🔄 รีเฟรชข้อมูล</button>
         </div>
-        <button class="btn-primary" onclick="refreshCurrent()">🔄 รีเฟรชข้อมูล</button>
+
+        <div class="table-card">
+          <table>
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
       </div>
 
-      <div class="table-card">
-        <table>
-          <thead id="tableHead"></thead>
-          <tbody id="tableBody"></tbody>
-        </table>
+      <!-- View B: Strapi-Style Roles & Permissions View -->
+      <div id="permissionsView">
+        <div class="perm-header-bar">
+          <div>
+            <button class="perm-back-btn" onclick="switchSidebarMode('collections'); navigate('pets');">
+              ← Back to Collections
+            </button>
+            <div class="perm-role-select-box">
+              <div class="perm-role-title">
+                <span id="roleDisplayName">Public</span>
+                <select class="perm-role-dropdown" id="roleSelector" onchange="switchRole(this.value)">
+                  <option value="public">Public (ผู้ใช้งานภายนอก)</option>
+                  <option value="adopter">Adopter (ผู้ขอรับเลี้ยง)</option>
+                  <option value="shelter_staff">Shelter Staff (เจ้าหน้าที่ศูนย์)</option>
+                  <option value="admin">Admin (ผู้ดูแลระบบ)</option>
+                </select>
+              </div>
+            </div>
+            <div class="perm-role-desc" id="roleDescription">
+              Default role given to unauthenticated user.
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <button class="btn-save-strapi" onclick="savePermissions()">
+              <span>💾 Save</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="perm-grid-container">
+          
+          <!-- Left Column: Permissions Accordions -->
+          <div class="perm-left-col">
+            <div class="perm-sec-header">
+              <div class="perm-sec-title">Permissions</div>
+              <div class="perm-sec-sub">Only actions bound by a route are listed below.</div>
+            </div>
+
+            <!-- 1. Category Accordion -->
+            <div class="perm-accordion-card open" id="card-category">
+              <div class="perm-card-head" onclick="toggleCard('card-category')">
+                <div>
+                  <div class="perm-card-title">Category</div>
+                  <div class="perm-card-sub">Define all allowed actions for the api::category plugin.</div>
+                </div>
+                <div class="perm-card-chevron">▼</div>
+              </div>
+              <div class="perm-card-body">
+                <div class="perm-sub-bar">
+                  <div class="perm-sub-name">CATEGORY</div>
+                  <button class="perm-select-all" onclick="toggleSelectAll('category')">Select all</button>
+                </div>
+                <div class="perm-actions-grid" id="actions-category">
+                  <!-- Injected via JavaScript -->
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Shelter Accordion (Department) -->
+            <div class="perm-accordion-card open" id="card-shelter">
+              <div class="perm-card-head" onclick="toggleCard('card-shelter')">
+                <div>
+                  <div class="perm-card-title">Shelter (Department)</div>
+                  <div class="perm-card-sub">Define all allowed actions for the api::shelter plugin.</div>
+                </div>
+                <div class="perm-card-chevron">▼</div>
+              </div>
+              <div class="perm-card-body">
+                <div class="perm-sub-bar">
+                  <div class="perm-sub-name">SHELTER</div>
+                  <button class="perm-select-all" onclick="toggleSelectAll('shelter')">Select all</button>
+                </div>
+                <div class="perm-actions-grid" id="actions-shelter">
+                  <!-- Injected via JavaScript -->
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Pet Accordion -->
+            <div class="perm-accordion-card open" id="card-pet">
+              <div class="perm-card-head" onclick="toggleCard('card-pet')">
+                <div>
+                  <div class="perm-card-title">Pet</div>
+                  <div class="perm-card-sub">Define all allowed actions for the api::pet plugin.</div>
+                </div>
+                <div class="perm-card-chevron">▼</div>
+              </div>
+              <div class="perm-card-body">
+                <div class="perm-sub-bar">
+                  <div class="perm-sub-name">PET</div>
+                  <button class="perm-select-all" onclick="toggleSelectAll('pet')">Select all</button>
+                </div>
+                <div class="perm-actions-grid" id="actions-pet">
+                  <!-- Injected via JavaScript -->
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Adoption Application Accordion (Ticket) -->
+            <div class="perm-accordion-card open" id="card-application">
+              <div class="perm-card-head" onclick="toggleCard('card-application')">
+                <div>
+                  <div class="perm-card-title">Application (Ticket)</div>
+                  <div class="perm-card-sub">Define all allowed actions for the api::application plugin.</div>
+                </div>
+                <div class="perm-card-chevron">▼</div>
+              </div>
+              <div class="perm-card-body">
+                <div class="perm-sub-bar">
+                  <div class="perm-sub-name">APPLICATION</div>
+                  <button class="perm-select-all" onclick="toggleSelectAll('application')">Select all</button>
+                </div>
+                <div class="perm-actions-grid" id="actions-application">
+                  <!-- Injected via JavaScript -->
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. Pet Inquiry Accordion (Ticket-comment) -->
+            <div class="perm-accordion-card open" id="card-inquiry">
+              <div class="perm-card-head" onclick="toggleCard('card-inquiry')">
+                <div>
+                  <div class="perm-card-title">Inquiry (Ticket-comment)</div>
+                  <div class="perm-card-sub">Define all allowed actions for the api::inquiry plugin.</div>
+                </div>
+                <div class="perm-card-chevron">▼</div>
+              </div>
+              <div class="perm-card-body">
+                <div class="perm-sub-bar">
+                  <div class="perm-sub-name">INQUIRY</div>
+                  <button class="perm-select-all" onclick="toggleSelectAll('inquiry')">Select all</button>
+                </div>
+                <div class="perm-actions-grid" id="actions-inquiry">
+                  <!-- Injected via JavaScript -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Column: Advanced settings / Bound Route Inspector -->
+          <div class="perm-right-col">
+            <div class="adv-title">Advanced settings</div>
+            <div class="adv-sub">
+              Select the application's actions or the plugin's actions and view the bound REST API route below.
+            </div>
+
+            <div id="advRouteDetails">
+              <div class="adv-route-card">
+                <div class="adv-route-action">
+                  <span>find</span>
+                  <span class="adv-route-badge badge-get">GET</span>
+                </div>
+                <div class="adv-route-path">/api/categories</div>
+              </div>
+
+              <div class="adv-route-card">
+                <div class="adv-route-action">
+                  <span>findOne</span>
+                  <span class="adv-route-badge badge-get">GET</span>
+                </div>
+                <div class="adv-route-path">/api/categories/:id</div>
+              </div>
+
+              <div class="adv-route-card">
+                <div class="adv-route-action">
+                  <span>create</span>
+                  <span class="adv-route-badge badge-post">POST</span>
+                </div>
+                <div class="adv-route-path">/api/categories</div>
+              </div>
+
+              <div class="adv-route-card">
+                <div class="adv-route-action">
+                  <span>update</span>
+                  <span class="adv-route-badge badge-put">PUT</span>
+                </div>
+                <div class="adv-route-path">/api/categories/:id</div>
+              </div>
+
+              <div class="adv-route-card">
+                <div class="adv-route-action">
+                  <span>delete</span>
+                  <span class="adv-route-badge badge-delete">DELETE</span>
+                </div>
+                <div class="adv-route-path">/api/categories/:id</div>
+              </div>
+            </div>
+
+            <div style="font-size: 11px; color: #64748b; line-height: 1.5; margin-top: 16px;">
+              💡 <strong>ความปลอดภัย:</strong> สิทธิ์ที่เปิดใช้งานจะถูกผูกกับ Middleware ในระบบเพื่อควบคุมการเข้าถึงทั้ง Public และ Authenticated Users
+            </div>
+          </div>
+
+        </div>
       </div>
+
     </div>
   </div>
 
   <script>
     let currentNav = 'pets';
     let currentUser = null;
+    let selectedRole = 'public';
+    let permissionsData = {};
 
     // Check Auth State on Load
     window.addEventListener('DOMContentLoaded', () => {
@@ -585,7 +1134,6 @@
       errBox.style.display = 'none';
 
       try {
-        // Try admin login first, then normal login fallback
         let res = await fetch('/admin/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -605,7 +1153,7 @@
         if (!res.ok) {
           let errorText = data.message || data.error;
           if (typeof errorText === 'object') errorText = JSON.stringify(errorText);
-          errBox.textContent = (errorText && errorText !== '{}') ? errorText : 'Login failed. Please check your credentials.';
+          errBox.textContent = (errorText && errorText !== '{}') ? errorText : 'Login failed. Please check credentials.';
           errBox.style.display = 'block';
           return;
         }
@@ -641,12 +1189,12 @@
         if (!res.ok) {
           let errorText = data.message || data.error;
           if (typeof errorText === 'object') errorText = JSON.stringify(errorText);
-          errBox.textContent = (errorText && errorText !== '{}') ? errorText : 'Registration failed. Please check Supabase triggers or try again.';
+          errBox.textContent = (errorText && errorText !== '{}') ? errorText : 'Registration failed.';
           errBox.style.display = 'block';
           return;
         }
 
-        alert('ลงทะเบียนสำเร็จ! กรุณาเข้าสู่ระบบด้วยอีเมลและรหัสผ่านที่สมัคร');
+        alert('ลงทะเบียนสำเร็จ! กรุณาเข้าสู่ระบบ');
         switchAuthTab('login');
         document.getElementById('loginEmail').value = email;
         document.getElementById('loginPassword').value = password;
@@ -673,6 +1221,7 @@
       document.getElementById('authOverlay').style.display = 'none';
       document.getElementById('currentEmail').textContent = currentUser?.email || 'Authenticated User';
       document.getElementById('currentRole').textContent = currentUser?.role || 'ADOPTER';
+      switchSidebarMode('collections');
       navigate('pets');
     }
 
@@ -684,10 +1233,35 @@
       switchAuthTab('login');
     }
 
+    // Toggle Sidebar Mode between "Collections" and "Settings"
+    function switchSidebarMode(mode) {
+      document.querySelectorAll('.icon-btn').forEach(btn => btn.classList.remove('active'));
+      const colSidebar = document.getElementById('sidebarCollections');
+      const setSidebar = document.getElementById('sidebarSettings');
+      const collectionView = document.getElementById('collectionView');
+      const permissionsView = document.getElementById('permissionsView');
+
+      if (mode === 'settings') {
+        document.getElementById('btnNavSettings')?.classList.add('active');
+        colSidebar.style.display = 'none';
+        setSidebar.style.display = 'block';
+        collectionView.style.display = 'none';
+        permissionsView.style.display = 'flex';
+        openRolesSettings();
+      } else {
+        colSidebar.style.display = 'block';
+        setSidebar.style.display = 'none';
+        collectionView.style.display = 'block';
+        permissionsView.style.display = 'none';
+      }
+    }
+
     function navigate(view) {
       currentNav = view;
       document.querySelectorAll('.icon-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      document.getElementById('collectionView').style.display = 'block';
+      document.getElementById('permissionsView').style.display = 'none';
 
       if (view === 'pets') {
         document.getElementById('btnNavPets')?.classList.add('active');
@@ -882,7 +1456,7 @@
           body: JSON.stringify({ status, review_notes: 'Reviewed via Web UI' })
         });
         if (res.ok) {
-          alert(`อัปเดตสถานะเป็น ${status} สำเร็จ!`);
+          showToast(`อัปเดตสถานะเป็น ${status} สำเร็จ!`);
           loadApplications();
         } else {
           const err = await res.json();
@@ -891,6 +1465,135 @@
       } catch (e) {
         alert('Error: ' + e.message);
       }
+    }
+
+    /* ========================================================= */
+    /* STRAPI-STYLE ROLES & PERMISSIONS LOGIC                    */
+    /* ========================================================= */
+    async function openRolesSettings() {
+      document.getElementById('collectionView').style.display = 'none';
+      document.getElementById('permissionsView').style.display = 'flex';
+      await loadRolePermissions(selectedRole);
+    }
+
+    async function switchRole(roleId) {
+      selectedRole = roleId;
+      document.getElementById('roleSelector').value = roleId;
+      await loadRolePermissions(roleId);
+    }
+
+    async function loadRolePermissions(roleId) {
+      try {
+        const res = await fetch(`/api/admin/roles/${roleId}/permissions`);
+        const json = await res.json();
+
+        if (res.ok) {
+          permissionsData = json.permissions;
+          document.getElementById('roleDisplayName').textContent = json.name || roleId;
+          document.getElementById('roleDescription').textContent = json.description || '';
+          renderPermissionsGrid(permissionsData);
+        } else {
+          showToast('โหลดข้อมูลสิทธิ์ไม่สำเร็จ: ' + json.message, true);
+        }
+      } catch (err) {
+        console.error('Error loading permissions:', err);
+      }
+    }
+
+    function renderPermissionsGrid(perms) {
+      const collections = ['category', 'shelter', 'pet', 'application', 'inquiry'];
+
+      collections.forEach(col => {
+        const container = document.getElementById(`actions-${col}`);
+        if (!container || !perms[col]) return;
+
+        const actions = perms[col].actions;
+        let html = '';
+
+        Object.keys(actions).forEach(actionKey => {
+          const act = actions[actionKey];
+          const isChecked = act.enabled ? 'checked' : '';
+
+          html += `
+            <label class="perm-check-label" onmouseenter="previewRoute('${actionKey}', '${act.route}')">
+              <input type="checkbox" id="chk-${col}-${actionKey}" ${isChecked} onchange="updateActionState('${col}', '${actionKey}', this.checked)">
+              <span>${actionKey}</span>
+            </label>
+          `;
+        });
+
+        container.innerHTML = html;
+      });
+    }
+
+    function updateActionState(collection, action, isChecked) {
+      if (permissionsData[collection]?.actions[action]) {
+        permissionsData[collection].actions[action].enabled = isChecked;
+      }
+    }
+
+    function toggleSelectAll(collection) {
+      const container = document.getElementById(`actions-${collection}`);
+      if (!container || !permissionsData[collection]) return;
+
+      const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+      const anyUnchecked = Array.from(checkboxes).some(cb => !cb.checked);
+      const newState = anyUnchecked; // If any is false, check all; else uncheck all
+
+      checkboxes.forEach(cb => {
+        cb.checked = newState;
+      });
+
+      Object.keys(permissionsData[collection].actions).forEach(actionKey => {
+        permissionsData[collection].actions[actionKey].enabled = newState;
+      });
+    }
+
+    function toggleCard(cardId) {
+      const card = document.getElementById(cardId);
+      if (card) card.classList.toggle('open');
+    }
+
+    function previewRoute(action, route) {
+      // Highlights the right inspector if desired
+    }
+
+    async function savePermissions() {
+      const token = localStorage.getItem('pet_token');
+      try {
+        const res = await fetch(`/api/admin/roles/${selectedRole}/permissions`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            permissions: permissionsData,
+            description: document.getElementById('roleDescription').textContent
+          })
+        });
+
+        const json = await res.json();
+        if (res.ok) {
+          showToast(`บันทึกสิทธิ์ของบทบาท '${json.role.toUpperCase()}' เรียบร้อยแล้ว! ✨`);
+        } else {
+          showToast('ไม่สามารถบันทึกได้: ' + (json.message || json.error), true);
+        }
+      } catch (err) {
+        showToast('เกิดข้อผิดพลาดในการเชื่อมต่อ: ' + err.message, true);
+      }
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('strapiToast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = msg;
+      toast.style.background = isError ? '#7f1d1d' : '#065f46';
+      toast.style.borderColor = isError ? '#dc2626' : '#059669';
+      toast.style.display = 'flex';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3500);
     }
   </script>
 </body>

@@ -1,0 +1,546 @@
+{
+  "public": {
+    "name": "Public",
+    "description": "Default role given to unauthenticated user.",
+    "permissions": {
+      "category": {
+        "name": "Category",
+        "description": "Define all allowed actions for the api::category plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/categories"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/categories/:id"
+          },
+          "create": {
+            "enabled": false,
+            "route": "POST /api/categories"
+          },
+          "update": {
+            "enabled": false,
+            "route": "PUT /api/categories/:id"
+          },
+          "delete": {
+            "enabled": false,
+            "route": "DELETE /api/categories/:id"
+          }
+        }
+      },
+      "shelter": {
+        "name": "Shelter",
+        "description": "Define all allowed actions for the api::shelter plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/shelters"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/shelters/:id"
+          },
+          "create": {
+            "enabled": false,
+            "route": "POST /api/shelters"
+          },
+          "update": {
+            "enabled": false,
+            "route": "PUT /api/shelters/:id"
+          },
+          "delete": {
+            "enabled": false,
+            "route": "DELETE /api/shelters/:id"
+          }
+        }
+      },
+      "pet": {
+        "name": "Pet",
+        "description": "Define all allowed actions for the api::pet plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/pets"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/pets/:id"
+          },
+          "create": {
+            "enabled": false,
+            "route": "POST /api/pets"
+          },
+          "update": {
+            "enabled": false,
+            "route": "PUT /api/pets/:id"
+          },
+          "delete": {
+            "enabled": false,
+            "route": "DELETE /api/pets/:id"
+          }
+        }
+      },
+      "application": {
+        "name": "Application",
+        "description": "Define all allowed actions for the api::application plugin.",
+        "actions": {
+          "find": {
+            "enabled": false,
+            "route": "GET /api/applications"
+          },
+          "findOne": {
+            "enabled": false,
+            "route": "GET /api/applications/:id"
+          },
+          "create": {
+            "enabled": false,
+            "route": "POST /api/applications"
+          },
+          "update": {
+            "enabled": false,
+            "route": "PUT /api/applications/:id"
+          },
+          "delete": {
+            "enabled": false,
+            "route": "DELETE /api/applications/:id"
+          }
+        }
+      },
+      "inquiry": {
+        "name": "Inquiry",
+        "description": "Define all allowed actions for the api::inquiry plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/pets/:id"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/pets/:id"
+          },
+          "create": {
+            "enabled": false,
+            "route": "POST /api/pets/:id/inquiries"
+          },
+          "update": {
+            "enabled": false,
+            "route": "PUT /api/pets/:id/inquiries"
+          },
+          "delete": {
+            "enabled": false,
+            "route": "DELETE /api/pets/:id/inquiries"
+          }
+        }
+      }
+    }
+  },
+  "adopter": {
+    "name": "Adopter",
+    "description": "Authenticated users who can browse, inquire, and submit adoption applications.",
+    "permissions": {
+      "category": {
+        "name": "Category",
+        "description": "Define all allowed actions for the api::category plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/categories"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/categories/:id"
+          },
+          "create": {
+            "enabled": false,
+            "route": "POST /api/categories"
+          },
+          "update": {
+            "enabled": false,
+            "route": "PUT /api/categories/:id"
+          },
+          "delete": {
+            "enabled": false,
+            "route": "DELETE /api/categories/:id"
+          }
+        }
+      },
+      "shelter": {
+        "name": "Shelter",
+        "description": "Define all allowed actions for the api::shelter plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/shelters"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/shelters/:id"
+          },
+          "create": {
+            "enabled": false,
+            "route": "POST /api/shelters"
+          },
+          "update": {
+            "enabled": false,
+            "route": "PUT /api/shelters/:id"
+          },
+          "delete": {
+            "enabled": false,
+            "route": "DELETE /api/shelters/:id"
+          }
+        }
+      },
+      "pet": {
+        "name": "Pet",
+        "description": "Define all allowed actions for the api::pet plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/pets"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/pets/:id"
+          },
+          "create": {
+            "enabled": false,
+            "route": "POST /api/pets"
+          },
+          "update": {
+            "enabled": false,
+            "route": "PUT /api/pets/:id"
+          },
+          "delete": {
+            "enabled": false,
+            "route": "DELETE /api/pets/:id"
+          }
+        }
+      },
+      "application": {
+        "name": "Application",
+        "description": "Define all allowed actions for the api::application plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/applications"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/applications/:id"
+          },
+          "create": {
+            "enabled": true,
+            "route": "POST /api/applications"
+          },
+          "update": {
+            "enabled": true,
+            "route": "PUT /api/applications/:id"
+          },
+          "delete": {
+            "enabled": true,
+            "route": "DELETE /api/applications/:id"
+          }
+        }
+      },
+      "inquiry": {
+        "name": "Inquiry",
+        "description": "Define all allowed actions for the api::inquiry plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/pets/:id"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/pets/:id"
+          },
+          "create": {
+            "enabled": true,
+            "route": "POST /api/pets/:id/inquiries"
+          },
+          "update": {
+            "enabled": false,
+            "route": "PUT /api/pets/:id/inquiries"
+          },
+          "delete": {
+            "enabled": false,
+            "route": "DELETE /api/pets/:id/inquiries"
+          }
+        }
+      }
+    }
+  },
+  "shelter_staff": {
+    "name": "Shelter Staff",
+    "description": "Staff members who manage pets, categories, and review applications.",
+    "permissions": {
+      "category": {
+        "name": "Category",
+        "description": "Define all allowed actions for the api::category plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/categories"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/categories/:id"
+          },
+          "create": {
+            "enabled": true,
+            "route": "POST /api/categories"
+          },
+          "update": {
+            "enabled": true,
+            "route": "PUT /api/categories/:id"
+          },
+          "delete": {
+            "enabled": false,
+            "route": "DELETE /api/categories/:id"
+          }
+        }
+      },
+      "shelter": {
+        "name": "Shelter",
+        "description": "Define all allowed actions for the api::shelter plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/shelters"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/shelters/:id"
+          },
+          "create": {
+            "enabled": false,
+            "route": "POST /api/shelters"
+          },
+          "update": {
+            "enabled": true,
+            "route": "PUT /api/shelters/:id"
+          },
+          "delete": {
+            "enabled": false,
+            "route": "DELETE /api/shelters/:id"
+          }
+        }
+      },
+      "pet": {
+        "name": "Pet",
+        "description": "Define all allowed actions for the api::pet plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/pets"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/pets/:id"
+          },
+          "create": {
+            "enabled": true,
+            "route": "POST /api/pets"
+          },
+          "update": {
+            "enabled": true,
+            "route": "PUT /api/pets/:id"
+          },
+          "delete": {
+            "enabled": true,
+            "route": "DELETE /api/pets/:id"
+          }
+        }
+      },
+      "application": {
+        "name": "Application",
+        "description": "Define all allowed actions for the api::application plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/applications"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/applications/:id"
+          },
+          "create": {
+            "enabled": false,
+            "route": "POST /api/applications"
+          },
+          "update": {
+            "enabled": true,
+            "route": "PATCH /api/applications/:id/status"
+          },
+          "delete": {
+            "enabled": false,
+            "route": "DELETE /api/applications/:id"
+          }
+        }
+      },
+      "inquiry": {
+        "name": "Inquiry",
+        "description": "Define all allowed actions for the api::inquiry plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/pets/:id"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/pets/:id"
+          },
+          "create": {
+            "enabled": true,
+            "route": "POST /api/pets/:id/inquiries"
+          },
+          "update": {
+            "enabled": true,
+            "route": "PUT /api/pets/:id/inquiries"
+          },
+          "delete": {
+            "enabled": true,
+            "route": "DELETE /api/pets/:id/inquiries"
+          }
+        }
+      }
+    }
+  },
+  "admin": {
+    "name": "Admin",
+    "description": "Super administrator with full system management permissions.",
+    "permissions": {
+      "category": {
+        "name": "Category",
+        "description": "Define all allowed actions for the api::category plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/categories"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/categories/:id"
+          },
+          "create": {
+            "enabled": true,
+            "route": "POST /api/categories"
+          },
+          "update": {
+            "enabled": true,
+            "route": "PUT /api/categories/:id"
+          },
+          "delete": {
+            "enabled": true,
+            "route": "DELETE /api/categories/:id"
+          }
+        }
+      },
+      "shelter": {
+        "name": "Shelter",
+        "description": "Define all allowed actions for the api::shelter plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/shelters"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/shelters/:id"
+          },
+          "create": {
+            "enabled": true,
+            "route": "POST /api/shelters"
+          },
+          "update": {
+            "enabled": true,
+            "route": "PUT /api/shelters/:id"
+          },
+          "delete": {
+            "enabled": true,
+            "route": "DELETE /api/shelters/:id"
+          }
+        }
+      },
+      "pet": {
+        "name": "Pet",
+        "description": "Define all allowed actions for the api::pet plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/pets"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/pets/:id"
+          },
+          "create": {
+            "enabled": true,
+            "route": "POST /api/pets"
+          },
+          "update": {
+            "enabled": true,
+            "route": "PUT /api/pets/:id"
+          },
+          "delete": {
+            "enabled": true,
+            "route": "DELETE /api/pets/:id"
+          }
+        }
+      },
+      "application": {
+        "name": "Application",
+        "description": "Define all allowed actions for the api::application plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/applications"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/applications/:id"
+          },
+          "create": {
+            "enabled": true,
+            "route": "POST /api/applications"
+          },
+          "update": {
+            "enabled": true,
+            "route": "PUT /api/applications/:id"
+          },
+          "delete": {
+            "enabled": true,
+            "route": "DELETE /api/applications/:id"
+          }
+        }
+      },
+      "inquiry": {
+        "name": "Inquiry",
+        "description": "Define all allowed actions for the api::inquiry plugin.",
+        "actions": {
+          "find": {
+            "enabled": true,
+            "route": "GET /api/pets/:id"
+          },
+          "findOne": {
+            "enabled": true,
+            "route": "GET /api/pets/:id"
+          },
+          "create": {
+            "enabled": true,
+            "route": "POST /api/pets/:id/inquiries"
+          },
+          "update": {
+            "enabled": true,
+            "route": "PUT /api/pets/:id/inquiries"
+          },
+          "delete": {
+            "enabled": true,
+            "route": "DELETE /api/pets/:id/inquiries"
+          }
+        }
+      }
+    }
+  }
+}
