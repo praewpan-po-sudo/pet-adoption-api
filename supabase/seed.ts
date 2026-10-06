@@ -1,6 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
 
+try {
+  if (typeof globalThis.WebSocket === 'undefined') {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const ws = require('ws');
+    (globalThis as any).WebSocket = ws.default || ws.WebSocket || ws;
+  }
+} catch {}
+
 dotenv.config();
 
 const supabaseUrl = process.env.SUPABASE_URL || '';

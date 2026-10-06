@@ -18,7 +18,7 @@ const rawUrl = (process.env.SUPABASE_URL || 'https://placeholder.supabase.co').t
 // ป้องกันการใส่ /rest/v1 หรือเครื่องหมาย / ต่อท้าย URL โดยไม่ตั้งใจ
 const supabaseUrl = rawUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/+$/, '');
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'placeholder-anon-key';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key';
+const supabaseServiceKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
 
 if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
   console.warn('⚠️ Warning: SUPABASE_URL or SUPABASE_ANON_KEY is missing in environment variables.');
@@ -41,8 +41,8 @@ export const createScopedClient = (token: string): SupabaseClient => {
   });
 };
 
-// 3. Admin Client (ใช้ Service Role Key สำหรับงานระบบหลังบ้านที่ต้องข้าม RLS)
-export let supabaseAdmin: any = supabaseServiceKey
+// 3. Admin Client (ใช้ Service Role Key ถ้ามี ถ้าไม่มีให้ใช้ supabase ปกติ)
+export let supabaseAdmin: any = (supabaseServiceKey && supabaseServiceKey !== 'placeholder-service-key')
   ? createClient(supabaseUrl, supabaseServiceKey, {
       auth: {
         autoRefreshToken: false,

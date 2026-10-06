@@ -111,7 +111,7 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response) => {
     .select(`
       *,
       pet:pets(id, name, breed, status),
-      applicant:profiles(id, email, first_name, last_name)
+      applicant:profiles!applicant_id(id, email, first_name, last_name)
     `)
     .single();
 
@@ -134,7 +134,7 @@ router.get('/', authenticate, async (req: AuthRequest, res: Response) => {
     .select(`
       *,
       pet:pets(id, name, breed, image_url, status),
-      applicant:profiles(id, email, first_name, last_name, phone)
+      applicant:profiles!applicant_id(id, email, first_name, last_name, phone)
     `)
     .order('created_at', { ascending: false });
 
@@ -170,7 +170,7 @@ router.get('/:id', authenticate, async (req: AuthRequest, res: Response) => {
     .select(`
       *,
       pet:pets(id, name, breed, image_url, status),
-      applicant:profiles(id, email, first_name, last_name, phone)
+      applicant:profiles!applicant_id(id, email, first_name, last_name, phone)
     `)
     .eq('id', req.params.id)
     .single();
@@ -250,7 +250,7 @@ const updateApplicationHandler = async (req: AuthRequest, res: Response) => {
     .select(`
       *,
       pet:pets(id, name, breed, status),
-      applicant:profiles(id, email, first_name, last_name)
+      applicant:profiles!applicant_id(id, email, first_name, last_name)
     `)
     .single();
 
