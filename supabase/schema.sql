@@ -172,6 +172,8 @@ BEGIN
         first_name = EXCLUDED.first_name,
         last_name = EXCLUDED.last_name;
     RETURN NEW;
+EXCEPTION WHEN OTHERS THEN
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

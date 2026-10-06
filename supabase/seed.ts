@@ -71,6 +71,20 @@ async function seed() {
     } else {
       console.log(`✅ Created ${user.role} user: ${user.email} (${data.user.id})`);
     }
+
+    if (data?.user?.id) {
+      const { error: profileError } = await supabase.from('profiles').upsert({
+        id: data.user.id,
+        email: user.email,
+        first_name: user.firstName,
+        last_name: user.lastName,
+        role: user.role,
+        phone: user.phone,
+      });
+      if (profileError) {
+        console.warn(`⚠️ Warning updating profile for ${user.email}:`, profileError.message);
+      }
+    }
   }
 
   // 2. Categories
