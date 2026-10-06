@@ -25,7 +25,7 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
 
   const token = authHeader.split(' ')[1];
 
-  // Demo Admin Token Support (for UI testing and presentations)
+  // Demo Tokens Support (for offline/presentation testing)
   if (token === 'demo_admin_token') {
     req.token = token;
     req.user = {
@@ -34,6 +34,30 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
       role: 'ADMIN',
       firstName: 'Super',
       lastName: 'Admin',
+    };
+    return next();
+  }
+
+  if (token === 'demo_user_token') {
+    req.token = token;
+    req.user = {
+      id: 'b2222222-2222-2222-2222-222222222222',
+      email: 'adopter1@petadoption.local',
+      role: 'ADOPTER',
+      firstName: 'Somchai',
+      lastName: 'Jaidee',
+    };
+    return next();
+  }
+
+  if (token === 'demo_staff_token') {
+    req.token = token;
+    req.user = {
+      id: 'c3333333-3333-3333-3333-333333333333',
+      email: 'staff@petadoption.local',
+      role: 'SHELTER_STAFF',
+      firstName: 'Shelter',
+      lastName: 'Staff',
     };
     return next();
   }

@@ -154,6 +154,34 @@ router.post('/api/auth/login', async (req: AuthRequest, res: Response) => {
         },
       });
     }
+
+    if (email === (process.env.USER_EMAIL || 'adopter1@petadoption.local') && password === (process.env.USER_PASSWORD || 'Password123!')) {
+      return res.json({
+        message: 'User login successful',
+        token: 'demo_user_token',
+        user: {
+          id: 'b2222222-2222-2222-2222-222222222222',
+          email: 'adopter1@petadoption.local',
+          role: 'ADOPTER',
+          firstName: 'Somchai',
+          lastName: 'Jaidee',
+        },
+      });
+    }
+
+    if (email === (process.env.STAFF_EMAIL || 'staff@petadoption.local') && password === (process.env.STAFF_PASSWORD || 'Password123!')) {
+      return res.json({
+        message: 'User login successful',
+        token: 'demo_staff_token',
+        user: {
+          id: 'c3333333-3333-3333-3333-333333333333',
+          email: 'staff@petadoption.local',
+          role: 'SHELTER_STAFF',
+          firstName: 'Shelter',
+          lastName: 'Staff',
+        },
+      });
+    }
     return res.status(401).json({ error: 'Unauthorized', message: error?.message || 'Invalid credentials' });
   }
 
