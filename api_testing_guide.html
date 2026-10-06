@@ -341,10 +341,10 @@
         <td>ผู้สนใจส่งคำถามเกี่ยวกับสัตว์เลี้ยงตัวนั้น</td>
       </tr>
       <tr>
-        <td><span class="method-badge method-post">POST</span></td>
+        <td><span class="method-badge method-post">POST</span> / <span class="method-badge method-put">PUT</span> / <span class="method-badge method-delete">DELETE</span></td>
         <td><code>/api/applications</code></td>
-        <td><span class="tag tag-auth">ADOPTER</span></td>
-        <td>ยื่นใบสมัครขอรับอุปการะสัตว์เลี้ยง</td>
+        <td><span class="tag tag-auth">ADOPTER</span> / <span class="tag tag-admin">ADMIN</span></td>
+        <td>ยื่นคำขอรับเลี้ยง / แก้ไขข้อมูลคำขอ / ยกเลิกคำขอ (CRUD)</td>
       </tr>
       <tr>
         <td><span class="method-badge method-patch">PATCH</span></td>
@@ -496,9 +496,11 @@
       </li>
       <li>คลิก <strong>3.4.2 Get Applications</strong> (ผู้ใช้ดูรายการคำขอของตนเอง)</li>
       <li>คลิก <strong>3.4.3 Get Application by ID</strong> เพื่อดูรายละเอียดคำขอ</li>
-      <li>คลิก <strong>3.4.4 Review Application</strong> (แอดมินกดอนุมัติเป็น <code>APPROVED</code>)
+      <li>คลิก <strong>3.4.4 Update Application</strong> เพื่อทดสอบการแก้ไขข้อมูลใบสมัคร</li>
+      <li>คลิก <strong>3.4.5 Review Application</strong> (แอดมินกดอนุมัติเป็น <code>APPROVED</code>)
         <br><em>*จุดเด่น:* ระบบจะทำการเปลี่ยนสถานะของสัตว์เลี้ยงตัวนั้นให้เป็น <code>ADOPTED</code> ในฐานข้อมูลโดยอัตโนมัติ</em>
       </li>
+      <li>คลิก <strong>3.4.6 Delete Application</strong> เพื่อทดสอบการยกเลิก/ลบใบสมัคร</li>
     </ol>
   </div>
 
